@@ -1,0 +1,37 @@
+# LaTeX generated files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.nav
+*.snm
+*.glo
+*.loa
+*.maf
+*.mlf*
+*.lol
+*.loc
+*.mlt*
+*.mtc*
+*.xdy
+*.soc
+*.slo
+
+# Backup files created by text editors
+*~
+*.bak
+*.swp
+*.tmp
+
+# Other files to ignore
+.DS_Store
+
+# Compiled output
+*.pdf

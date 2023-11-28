@@ -209,8 +209,11 @@
 }
 %
 % DEFINE COMMAND FOR: othersupervisor -> NAME OF THESIS SCIENTIFIC CO-SUPERVISOR
-\newcommand*{\othersupervisor}[1]{\th@StoreIn{\th@othersupervisor}{#1}}
+\newcommand{\othersupervisorone}[1]{\def\@othersupervisorone{#1}}
+\newcommand{\othersupervisortwo}[1]{\def\@othersupervisortwo{#1}}
 \newcommand*{\th@othersupervisor}{\relax} % command is optional
+
+
 %
 % DEFINE COMMAND FOR: Examination Committee
 \newcommand*{\chairperson}[1]{\th@StoreIn{\th@chairperson}{#1}}

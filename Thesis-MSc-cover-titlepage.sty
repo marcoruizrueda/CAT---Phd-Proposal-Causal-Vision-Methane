@@ -85,18 +85,20 @@
 	\end{textblock*}
 % ############################################################################# 
 % printing SUPERVISORS
-    \begin{textblock*}{16cm}(2.5cm,20.5cm)
-		\centering
-		\begin{setfont}{12}
-			\ifthenelse{\equal{\th@othersupervisor}{\relax}}{
-               \tlangComSupervisor \th@supervisor
-               }{
-                 \tlangSupervisors \th@supervisor
-                 
-                 \th@othersupervisor
-               }
-		\end{setfont}
-	\end{textblock*}
+\begin{textblock*}{16cm}(2.5cm,20.5cm)
+    \centering
+    \begin{setfont}{12}
+        \tlangSupervisors \th@supervisor % Always print the main supervisor
+        \ifdefined\@othersupervisorone
+            \\ % New line for additional supervisor
+             \@othersupervisorone
+        \fi
+        \ifdefined\@othersupervisortwo
+            \\ % New line for another additional supervisor
+             \@othersupervisortwo
+        \fi
+    \end{setfont}
+\end{textblock*}
 % ############################################################################# 
 % printing JURI/Committee if FINAL THESIS = true
 	\ifthenelse{\boolean{\th@finalthesis}{\relax}}{
@@ -151,11 +153,11 @@
 \thispagestyle{empty}
 
 \textblockorigin{0pt}{0pt}
-\begin{textblock*}{16cm}(2.5cm,20.0cm)
-\begin{setfont}{12}
-	\input{./Thesis-MSc-editor-tool.tex}
-\end{setfont}
-\end{textblock*}
+% \begin{textblock*}{16cm}(2.5cm,20.0cm)
+% \begin{setfont}{12}
+% 	\input{./Thesis-MSc-editor-tool.tex}
+% \end{setfont}
+% \end{textblock*}
 \clearpage
 % #############################################################################
 % END OF EDITOR TOOL PAGE  
