@@ -3,7 +3,123 @@
 
 
 %% Saved with string encoding Unicode (UTF-8) 
+@misc{zhang_learning_2021,
+	title = {Learning {Invariant} {Representations} for {Reinforcement} {Learning} without {Reconstruction}},
+	url = {http://arxiv.org/abs/2006.10742},
+	doi = {10.48550/arXiv.2006.10742},
+	abstract = {We study how representation learning can accelerate reinforcement learning from rich observations, such as images, without relying either on domain knowledge or pixel-reconstruction. Our goal is to learn representations that both provide for effective downstream control and invariance to task-irrelevant details. Bisimulation metrics quantify behavioral similarity between states in continuous MDPs, which we propose using to learn robust latent representations which encode only the task-relevant information from observations. Our method trains encoders such that distances in latent space equal bisimulation distances in state space. We demonstrate the effectiveness of our method at disregarding task-irrelevant information using modified visual MuJoCo tasks, where the background is replaced with moving distractors and natural videos, while achieving SOTA performance. We also test a first-person highway driving task where our method learns invariance to clouds, weather, and time of day. Finally, we provide generalization results drawn from properties of bisimulation metrics, and links to causal inference.},
+	urldate = {2023-12-03},
+	publisher = {arXiv},
+	author = {Zhang, Amy and McAllister, Rowan and Calandra, Roberto and Gal, Yarin and Levine, Sergey},
+	month = apr,
+	year = {2021},
+	note = {arXiv:2006.10742 [cs, stat]},
+	keywords = {Computer Science - Artificial Intelligence, Computer Science - Machine Learning, Statistics - Machine Learning},
+}
 
+@misc{wang_ca-spacenet_2022,
+	title = {{CA}-{SpaceNet}: Counterfactual Analysis for 6D Pose Estimation in Space},
+	url = {http://arxiv.org/abs/2207.07869},
+	doi = {10.48550/arXiv.2207.07869},
+	shorttitle = {{CA}-{SpaceNet}},
+	abstract = {Reliable and stable 6D pose estimation of uncooperative space objects plays an essential role in on-orbit servicing and debris removal missions. Considering that the pose estimator is sensitive to background interference, this paper proposes a counterfactual analysis framework named {CASpaceNet} to complete robust 6D pose estimation of the spaceborne targets under complicated background. Specifically, conventional methods are adopted to extract the features of the whole image in the factual case. In the counterfactual case, a non-existent image without the target but only the background is imagined. Side effect caused by background interference is reduced by counterfactual analysis, which leads to unbiased prediction in final results. In addition, we also carry out lowbit-width quantization for {CA}-{SpaceNet} and deploy part of the framework to a Processing-In-Memory ({PIM}) accelerator on {FPGA}. Qualitative and quantitative results demonstrate the effectiveness and efficiency of our proposed method. To our best knowledge, this paper applies causal inference and network quantization to the 6D pose estimation of space-borne targets for the first time. The code is available at https://github.com/Shunli-Wang/{CA}-{SpaceNet}.},
+	number = {{arXiv}:2207.07869},
+	publisher = {{arXiv}},
+	author = {Wang, Shunli and Wang, Shuaibing and Jiao, Bo and Yang, Dingkang and Su, Liuzhen and Zhai, Peng and Chen, Chixiao and Zhang, Lihua},
+	urldate = {2023-12-03},
+	date = {2022-07-16},
+	eprinttype = {arxiv},
+	eprint = {2207.07869 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition, I.2.9, I.4.9},
+}
+
+
+@misc{jerzak_integrating_2023,
+	title = {Integrating Earth Observation Data into Causal Inference: Challenges and Opportunities},
+	url = {http://arxiv.org/abs/2301.12985},
+	doi = {10.48550/arXiv.2301.12985},
+	shorttitle = {Integrating Earth Observation Data into Causal Inference},
+	abstract = {Observational studies require adjustment for confounding factors that are correlated with both the treatment and outcome. In the setting where the observed variables are tabular quantities such as average income in a neighborhood, tools have been developed for addressing such confounding. However, in many parts of the developing world, features about local communities may be scarce. In this context, satellite imagery can play an important role, serving as a proxy for the confounding variables otherwise unobserved. In this paper, we study confounder adjustment in this non-tabular setting, where patterns or objects found in satellite images contribute to the confounder bias. Using the evaluation of anti-poverty aid programs in Africa as our running example, we formalize the challenge of performing causal adjustment with such unstructured data -- what conditions are sufficient to identify causal effects, how to perform estimation, and how to quantify the ways in which certain aspects of the unstructured image object are most predictive of the treatment decision. Via simulation, we also explore the sensitivity of satellite image-based observational inference to image resolution and to misspecification of the image-associated confounder. Finally, we apply these tools in estimating the effect of anti-poverty interventions in African communities from satellite imagery.},
+	number = {{arXiv}:2301.12985},
+	publisher = {{arXiv}},
+	author = {Jerzak, Connor T. and Johansson, Fredrik and Daoud, Adel},
+	urldate = {2023-11-01},
+	date = {2023-01-30},
+	eprinttype = {arxiv},
+	eprint = {2301.12985 [cs, stat]},
+	keywords = {62D20, Computer Science - Machine Learning, J.4, Statistics - Applications, Statistics - Machine Learning},
+}
+
+
+
+
+
+
+
+
+@article{cheong2021causal,
+  title={Causal Structure Learning of Bias for Fair Affect Recognition},
+  author={Cheong, et al.},
+  journal={Conference Proceedings},
+  year={2021}
+}
+
+@inproceedings{cheong2023,
+    author = {Jiaee Cheong and Sinan Kalkan and Hatice Gunes},
+    title = {Causal Structure Learning of Bias for Fair Affect Recognition},
+    booktitle = {Proceedings of the WACVW},
+    year = {2023},
+    note = {[Add additional information or URL if available]}
+}
+
+@article{cheng2021,
+    author = {Chin-Hsien Cheng and Simon A.T. Redfern},
+    title = {Quantifying Causal Contributions in Earth Systems by Normalized Information Flow},
+    journal = {Geoscientific Model Development},
+    year = {2021},
+    volume = {14},
+    pages = {1049-1061},
+    doi = {10.5194/gmd-14-1049-2021}
+}
+
+@article{jerzak2023,
+    author = {Connor T. Jerzak and Fredrik Johansson and Adel Daoud},
+    title = {Integrating Earth Observation Data into Causal Inference: Challenges and Opportunities},
+    journal = {[Specify journal or note if it's a conference paper]},
+    year = {2023},
+    note = {[Add URL if available]}
+}
+
+@inproceedings{wang2020,
+    author = {Jiayang Wang and Selvaprabu Nadarajah and Jingfan Wang and Arvind P. Ravikumar},
+    title = {A Machine Learning Approach to Methane Emissions Mitigation in the Oil and Gas Industry},
+    booktitle = {NeurIPS},
+    year = {2020},
+    note = {[Add URL if available]}
+}
+
+
+
+@article{gmd2021,
+  title={Quantifying causal contributions in Earth systems with sign-corrected normalized information flow},
+  author={Author, et al.},
+  journal={Geoscientific Model Development},
+  year={2021}
+}
+
+@article{zeng2021intrusion,
+  title={Improving the Stability of Intrusion Detection With Causal Deep Learning},
+  author={Zeng, et al.},
+  journal={Journal Title},
+  year={2021}
+}
+
+@inproceedings{schut2021interpretable,
+  title={Generating Interpretable Counterfactual Explanations By Implicit Minimisation of Epistemic and Aleatoric Uncertainties},
+  author={Schut, et al.},
+  booktitle={International Conference on Artificial Intelligence and Statistics},
+  year={2021}
+}
 
 
 @webpage{Fraunhofer-Heinrich-Hertz-Institute:2014dz,
