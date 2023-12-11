@@ -22,6 +22,34 @@ The vigilant monitoring of methane emissions is a cornerstone in the global stra
 At the core of this thesis is the proposition to leverage the strengths of Causal Machine Learning (CML) and Generative AI to refine the current capabilities of satellite-based methane emission monitoring. This integration is anticipated to revolutionize the field by providing enhanced precision, greater interpretability, and the ability to simulate diverse environmental scenarios, which are essential for robust policy-making and establishing accountability.
 
 
+\section{Justification}
+
+Methane, a colorless and odorless gas, plays a critical role in various Earth's atmospheric processes, notably global warming. Its prominence as the second most significant contributor to post-industrial global warming, after carbon dioxide, is underscored by a Global Warming Potential (GWP) 28-34 times that of CO2 over a century \cite{tian_catalytic_2021, IPCC2013}. Its major source, wetland methane emissions, constitutes about 20-30\% of global emissions, making it a significant focus for climate change mitigation efforts \cite{bousquet_contribution_2006, chen_estimation_2006}.
+
+Given methane's abundance and lower cost compared to other fuels, it emerges as an economically viable energy source. However, the technical challenges in capturing and storing methane, due to its gaseous nature at standard temperature and pressure, necessitate innovative approaches \cite{cardenas_is_1996, rajnauth_monetizing_2008}. These challenges, coupled with methane's potential as a cleaner-burning fuel, highlight the need for continued research and development in effective methane utilization technologies.
+
+Global methane emissions, estimated at approximately 570 million tonnes annually, have seen a recent increase of 9.8\% between 2018-2019 \cite{stocker2014climate, friedlingstein2020global}. Addressing this uptick, the International Methane Emissions Observatory (IMEO) was established to support the Global Methane Pledge's goal of reducing methane emissions in key sectors by 30\% by 2030.
+
+Satellite-based systems have been instrumental in detecting major methane emission events, facilitating mitigation efforts and tracking progress \cite{eo_portal_iss_2023, eo_portal_copernicus_2012, eo_portal_gosat_gw_2023, ghgsat_ghgsat_2023, writer_methane_tracking_2023}. Advances in technology, particularly the use of machine learning approaches, have further enhanced the detection of methane emissions from satellite imagery \cite{irakulis_loitxate_satellites_2022, maasakkers_using_2022, sherwin_single_blind_2023, joyce_using_2023, Prasad2020, wu2020deep, kumar_deep_2020}.
+
+However, the complexity of detecting and quantifying methane emissions from satellite images calls for sophisticated machine learning algorithms. This need coincides with the growing demand within the machine learning community for models that are not only effective but also transparent and interpretable \cite{roscher_explainable_2020, hall_review_2022}.
+
+Causal learning, a subset of machine learning focused on understanding cause-effect relationships, represents a paradigm shift from traditional statistical analysis. This approach has seen applications in various domains, including healthcare, where it aids in decision-making and estimating intervention impacts \cite{pearl_causal_2009, verboven_combining_2022, subramanian_estimating_2023, otgonbaatar_causality_2022, angell_estimating_2021, osazuwa_ness_causal_2022}. In methane detection from satellite images, causal learning can enhance the accuracy and reliability of algorithms by unraveling causal relationships between various factors in satellite imagery and methane emissions. This approach allows for the development of models that are not only robust and generalizable but also interpretable, a crucial attribute for ensuring accountability and transparency.
+
+The primary objective of this research is to harness causal learning in detecting methane emissions from satellite images. This endeavor is driven by the urgent necessity to accurately monitor and mitigate methane emissions as a strategy against climate change. The novelty of applying causal learning in this field presents a unique opportunity for significant contributions to both methane detection and the broader domain of causal learning.
+
+Our proposed methodology involves applying causal learning techniques to satellite imagery to discern the causes and effects of methane emissions globally. Causal learning, which focuses on deciphering causal relationships between variables, is adept at addressing complex and multidimensional data sets like those obtained from satellite imagery. It enables us to answer counterfactual queries, assess policy optimization, and examine the robustness and biases in models. By leveraging data from satellite missions like WorldView-3 and Landsat 8, which offer multispectral and high-resolution images, we can obtain comprehensive and frequent global coverage. This facilitates the detection and monitoring of methane emissions in otherwise inaccessible areas, as well as the study of their temporal and spatial dynamics.
+
+The causal learning techniques we plan to use include Bayesian networks, causal trees, and structural graphical models. These techniques have been successfully applied in various fields but are relatively nascent in remote sensing. Our work aims to improve scientific understanding of the methane cycle and support informed decision-making for its mitigation. We also anticipate this research to offer insights into methane emission policies and regulations, aiding in the development of effective and equitable strategies to reduce the global methane footprint and promote sustainable development.
+
+
+
+%%%%%%%
+
+
+
+
+
 \section{Review of Relevant Literature}
 Key papers were reviewed and synthesized to underpin the research on integrating Causal Machine Learning (CML) with Generative AI for methane emission monitoring using satellite imagery.
 
@@ -48,6 +76,10 @@ Furthermore, the simulation studies in \cite{jerzak_integrating_2023} provide a 
 
 These studies collectively chart the course for this research, each contributing essential elements to the framework of causal analysis in the context of methane emissions from satellite imagery. They not only inform the methodological approach of this thesis but also illuminate the interdisciplinary nature of research at the intersection of environmental science, causal inference, and satellite imaging.
 
+
+%%%%%
+
+%%%%%
 
 % \noindent \todo[color=green!40,author=Rui Cruz, inline]{The examples of techniques, tools, and packages along the document are for you to get familiarized with them. It is advisable to preserve those examples of usage, for reference, by moving the respective blocks of text to the last Chapter of this template (or to a Chapter file that you know you will not use), until you finish your document.}
 
