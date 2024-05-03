@@ -9,49 +9,97 @@
 \label{chap:intro}
 
 
-In this thesis proposal, we address the critical environmental challenge of accurately monitoring methane emissions, a task vital in the fight against climate change. Methane, being a key greenhouse gas, commands attention in climate policy due to its significant role in global warming. Our approach, innovatively combining Causal Machine Learning (CML) with Generative AI in satellite imagery analysis, aims to revolutionize methane emission surveillance. This integration seeks to advance beyond the traditional machine learning methodologies that often fall short in capturing the complex, causal dynamics behind methane emissions.
+\section{Motivation}
 
-CML steps into this gap, offering an in-depth understanding of cause-effect relationships vital for attributing emissions accurately. This capability is essential, not just for scientific understanding but also for shaping informed policy decisions and pinpointing liability in the context of environmental regulations. By employing Generative AI, specifically through Generative Adversarial Networks (GANs), we enhance this approach further. This technology enables the generation of synthetic satellite imagery, simulating a vast array of environmental scenarios, including those rare or extreme conditions that are typically underrepresented. Such enriched datasets are crucial for developing adaptable models that can interpret diverse environmental phenomena.
-
-However, the journey of integrating CML with Generative AI is intricate and demanding. The process of discerning true causal links from the complex mosaic of satellite data requires a harmonious blend of advanced computational techniques and multidisciplinary knowledge. While CML provides a pathway to deeper insights and interpretability, Generative AI brings in the dimension of data diversity and experimentation without the constraints of real-world data collection.
-
-This research aims to harness the strengths of both CML and Generative AI to create a robust and adaptable framework for methane emission monitoring. Our objectives are not limited to technical advancements; we also aim to offer new perspectives for understanding the interactions between methane emissions and environmental changes. Ultimately, this proposal is poised to make a significant contribution to environmental monitoring, policy-making, and our broader understanding of climate dynamics.
-
-The vigilant monitoring of methane emissions is a cornerstone in the global strategy against climate change. Methane, notorious for its potent greenhouse effect, presents a unique challenge for scientists and policymakers alike. As countries mobilize to meet climate goals, the need for precise quantification and attribution of these emissions becomes ever more crucial. This is not just a matter of scientific inquiry but a pressing issue that intersects with climate policy and legal frameworks, where accuracy in monitoring can influence regulatory outcomes and determine liability.
-
-At the core of this thesis is the proposition to leverage the strengths of Causal Machine Learning (CML) and Generative AI to refine the current capabilities of satellite-based methane emission monitoring. This integration is anticipated to revolutionize the field by providing enhanced precision, greater interpretability, and the ability to simulate diverse environmental scenarios, which are essential for robust policy-making and establishing accountability.
-
-
-\section{Justification}
-
+%%%%%%%%%%%%%%%%%% Why Methane?
 Methane, a colorless and odorless gas, plays a critical role in various Earth's atmospheric processes, notably global warming. Its prominence as the second most significant contributor to post-industrial global warming, after carbon dioxide, is underscored by a Global Warming Potential (GWP) 28-34 times that of CO2 over a century \cite{tian_catalytic_2021, IPCC2013}. Its major source, wetland methane emissions, constitutes about 20-30\% of global emissions, making it a significant focus for climate change mitigation efforts \cite{bousquet_contribution_2006, chen_estimation_2006}.
 
 Given methane's abundance and lower cost compared to other fuels, it emerges as an economically viable energy source. However, the technical challenges in capturing and storing methane, due to its gaseous nature at standard temperature and pressure, necessitate innovative approaches \cite{cardenas_is_1996, rajnauth_monetizing_2008}. These challenges, coupled with methane's potential as a cleaner-burning fuel, highlight the need for continued research and development in effective methane utilization technologies.
 
 Global methane emissions, estimated at approximately 570 million tonnes annually, have seen a recent increase of 9.8\% between 2018-2019 \cite{stocker2014climate, friedlingstein2020global}. Addressing this uptick, the International Methane Emissions Observatory (IMEO) was established to support the Global Methane Pledge's goal of reducing methane emissions in key sectors by 30\% by 2030.
 
-Satellite-based systems have been instrumental in detecting major methane emission events, facilitating mitigation efforts and tracking progress \cite{eo_portal_iss_2023, eo_portal_copernicus_2012, eo_portal_gosat_gw_2023, ghgsat_ghgsat_2023, writer_methane_tracking_2023}. Advances in technology, particularly the use of machine learning approaches, have further enhanced the detection of methane emissions from satellite imagery \cite{irakulis_loitxate_satellites_2022, maasakkers_using_2022, sherwin_single_blind_2023, joyce_using_2023, Prasad2020, wu2020deep, kumar_deep_2020}.
+%%%%%%%%%%%%%%%%%%  Why Satellites?
+Satellite-based systems have been instrumental in detecting major methane emission events, facilitating mitigation efforts and tracking progress \cite{eo_portal_iss_2023, eo_portal_copernicus_2012, eo_portal_gosat_gw_2023, ghgsat_ghgsat_2023, writer_methane_tracking_2023}. Globally, satellite-based methane monitoring has become increasingly relevant for both public and private entities across diverse sectors such as energy, agriculture, and environmental management. Public organizations like NASA and ESA (European Space Agency) use satellite data extensively to study atmospheric trends and inform climate policies. In the private sector, companies like GHGSat and Planet Labs have pioneered specialized satellite technology to track greenhouse gas emissions, with a focus on methane, providing invaluable data to industries and governmental agencies. Leading energy companies, including ExxonMobil and BP, are also adopting satellite-based monitoring to detect and address methane leaks within their operations.
 
-However, the complexity of detecting and quantifying methane emissions from satellite images calls for sophisticated machine learning algorithms. This need coincides with the growing demand within the machine learning community for models that are not only effective but also transparent and interpretable \cite{roscher_explainable_2020, hall_review_2022}.
+The growing reliance on satellite-based methane detection highlights its significance for industries seeking to comply with environmental regulations and achieve corporate sustainability objectives. This trend provides a scalable and cost-effective method for monitoring emissions, enabling both public and private companies to enhance their environmental stewardship while actively contributing to global efforts to combat climate change.
 
-Causal learning, a subset of machine learning focused on understanding cause-effect relationships, represents a paradigm shift from traditional statistical analysis. This approach has seen applications in various domains, including healthcare, where it aids in decision-making and estimating intervention impacts \cite{pearl_causal_2009, verboven_combining_2022, subramanian_estimating_2023, otgonbaatar_causality_2022, angell_estimating_2021, osazuwa_ness_causal_2022}. In methane detection from satellite images, causal learning can enhance the accuracy and reliability of algorithms by unraveling causal relationships between various factors in satellite imagery and methane emissions. This approach allows for the development of models that are not only robust and generalizable but also interpretable, a crucial attribute for ensuring accountability and transparency.
 
-The primary objective of this research is to harness causal learning in detecting methane emissions from satellite images. This endeavor is driven by the urgent necessity to accurately monitor and mitigate methane emissions as a strategy against climate change. The novelty of applying causal learning in this field presents a unique opportunity for significant contributions to both methane detection and the broader domain of causal learning.
+%%%%%%%%%%%%%%%%%%  Why Causal?
+Causal learning, a subset of machine learning focused on understanding cause-effect relationships, represents a paradigm shift from traditional statistical analysis. This approach has seen applications in various domains, including healthcare, where it aids in decision-making and estimating intervention impacts \cite{pearl_causal_2009, verboven_combining_2022, subramanian_estimating_2023, otgonbaatar_causality_2022, angell_estimating_2021, osazuwa_ness_causal_2024}. In methane detection from satellite images, causal learning can enhance the accuracy and reliability of algorithms by unraveling causal relationships between various factors in satellite imagery and methane emissions. This approach allows for the development of models that are not only robust and generalizable but also interpretable, a crucial attribute for ensuring accountability and transparency.
+
+
+%%%%%%%%%%%%%%%%%%  Objective
+The primary objective of this research is to harness causal learning in detecting methane emissions from satellite images. This endeavor is driven by the urgent necessity to accurately monitor and mitigate methane emissions as a strategy against climate change. The novelty of applying causal learning in this field presents a unique opportunity for significant contributions to both methane detection and the broader domain of causal learning. 
+
+%%%%%%%%%%%%%%%%%% Innovation
+Current methodologies predominantly rely on associative models that fail to decipher the underlying causal relationships affecting methane detection accuracy and generalization. Distinctly, this project confronts the limitations of conventional black-box prediction models by championing a causal inference framework. Unlike deep learning models that offer limited insight beyond correlation, our causal approach pretends to enable the dissection of the underlying mechanisms of methane emissions. This capability is crucial for establishing a comprehensive understanding of emission dynamics, facilitating not only accurate predictions but also providing robust explanations for observed phenomena. Such clarity is essential for attributing responsibilities within methane emission budgets, offering a solid foundation for policy formulation and environmental accountability.
+
+By explicitly modeling causal scenarios, our research aims to bridge the gap between correlation-based observations and the deeper causation narratives required for effective environmental management. This advancement aligns with ESA's strategic objectives of leveraging space technology for sustainable Earth observation, offering a cutting-edge toolset for deciphering the complex web of factors driving methane emissions. The anticipated outcomes include a detailed causal model that elucidates soil's influence on methane retrieval monitoring, setting new benchmarks for accuracy, explanatory power, and policy relevance in environmental science.
+
+Additionally, the research proposes an extensive, up-to-date literature review to synthesize existing knowledge and identify gaps in current methodologies for methane monitoring from satellite data. This comprehensive examination aims to fill critical research gaps by providing a thorough assessment of the state-of-the-art remote sensing techniques, sensor technologies, data processing, and analysis methodologies. By delving into applications and case studies, such as quantifying anomalous methane point sources, large-scale emission mapping, emission inventory validation, and climate change studies, the review will shed light on areas where current methodologies may fall short and where improvements are needed.
+
+Moreover, the review will evaluate the readiness of datasets for methane monitoring, distinguishing between methane-ready and not-ready datasets. This assessment will contribute valuable insights into the feasibility and limitations of current monitoring approaches, thereby addressing gaps in understanding the adequacy and effectiveness of existing data sources for methane monitoring.
+
+
+%%%%%%%%%%%%%%%%%% Early Conclusion
+Through these combined efforts, the research seeks to not only advance the scientific understanding of methane emissions but also provide actionable insights for policymakers, stakeholders, and environmental practitioners. By identifying and addressing research gaps, the proposed study aims to contribute to the development of more robust and reliable methodologies for methane monitoring, ultimately supporting informed decision-making and facilitating effective mitigation strategies for combating climate change.
+
+
+\section{Problem statement}
+
+Methane (CH$_4$) is recognized as the second most significant greenhouse gas contributing to anthropogenic climate change, after carbon dioxide (CO$_2$). Despite its shorter atmospheric lifetime, methane's global warming potential is approximately 28-36 times greater than CO$_2$ over a 100-year period, according to the Intergovernmental Panel on Climate Change (IPCC) \cite{IPCC2013}. The complexity and diversity of methane's sources, including natural processes, agriculture, and the fossil fuel industry, complicate the accurate monitoring and quantification of its global emissions. Traditional methods of methane detection, such as ground-based sensors and low-resolution satellite observations, are limited by their spatial coverage, sensitivity, and the inability to effectively identify and quantify emissions at a granular level. Furthermore, these methods often fail to capture the transient nature of methane emissions or to identify the causal factors behind observed emission patterns. Consequently, there is a pressing need for innovative approaches that can overcome these limitations, offering higher precision, greater spatial and temporal coverage, and the ability to decipher the complex interplay of factors contributing to methane emissions. Addressing this need is crucial for developing effective strategies to mitigate methane emissions and, by extension, combat climate change.
+
+
+This proposal outlines a novel approach to leverage causal learning algorithms in conjunction with satellite imagery to identify, quantify, and understand the dynamics of methane emissions globally.
+
 
 Our proposed methodology involves applying causal learning techniques to satellite imagery to discern the causes and effects of methane emissions globally. Causal learning, which focuses on deciphering causal relationships between variables, is adept at addressing complex and multidimensional data sets like those obtained from satellite imagery. It enables us to answer counterfactual queries, assess policy optimization, and examine the robustness and biases in models. By leveraging data from satellite missions like WorldView-3 and Landsat 8, which offer multispectral and high-resolution images, we can obtain comprehensive and frequent global coverage. This facilitates the detection and monitoring of methane emissions in otherwise inaccessible areas, as well as the study of their temporal and spatial dynamics.
 
 The causal learning techniques we plan to use include Bayesian networks, causal trees, and structural graphical models. These techniques have been successfully applied in various fields but are relatively nascent in remote sensing. Our work aims to improve scientific understanding of the methane cycle and support informed decision-making for its mitigation. We also anticipate this research to offer insights into methane emission policies and regulations, aiding in the development of effective and equitable strategies to reduce the global methane footprint and promote sustainable development.
 
+The research introduces a transformative approach to methane monitoring, emphasizing the pivotal role of soil characteristics in the detection process. It is premised on the understanding that soil attributes—such as composition, moisture, and organic content—significantly affect methane's optical signatures, thereby influencing its observability via satellite sensors. Our innovative methodology synergizes causal machine learning with satellite imagery analysis to unravel the intricate soil-methane interactions, enhancing the precision of emission detection and quantification.
+
+CML steps into this gap, offering an in-depth understanding of cause-effect relationships vital for attributing emissions accurately. This capability is essential, not just for scientific understanding but also for shaping informed policy decisions and pinpointing liability in the context of environmental regulations. However, the journey of integrating CML within AI-based models is intricate and demanding. The process of discerning true causal links from the complex mosaic of satellite data requires a harmonious blend of advanced computational techniques and multidisciplinary knowledge.
+
+Our objectives are not limited to technical advancements; we also aim to offer new perspectives for understanding the interactions between methane emissions and environmental changes. Ultimately, this proposal is poised to make a significant contribution to environmental monitoring, policy-making, and our broader understanding of climate dynamics.
+
+The vigilant monitoring of methane emissions is a cornerstone in the global strategy against climate change. Methane, notorious for its potent greenhouse effect, presents a unique challenge for scientists and policymakers alike. As countries mobilize to meet climate goals, the need for precise quantification and attribution of these emissions becomes ever more crucial. This is not just a matter of scientific inquiry but a pressing issue that intersects with climate policy and legal frameworks, where accuracy in monitoring can influence regulatory outcomes and determine liability.
+
+At the core of this thesis is the proposition to leverage the strengths of Causal Machine Learning (CML)  to refine the current capabilities of satellite-based methane emission monitoring. This integration is anticipated to revolutionize the field by providing enhanced precision, greater interpretability, and the ability to simulate diverse environmental scenarios, which are essential for robust policy-making and establishing accountability.
 
 
-%%%%%%%
+\section{Research objectives}
+
+This research embarks on a pioneering journey to redefine methane monitoring methodologies, with a pronounced focus on elucidating the impact of soil characteristics on methane's optical signatures as observed by satellite sensors. The integration of causal machine learning with satellite imagery analysis stands at the forefront of this initiative, aimed at unlocking a deeper understanding of the soil-methane nexus. The objectives are crafted to reflect a sophisticated blend of scientific inquiry and practical application, tailored to the rigorous expectations of aerospace engineering research:
+
+\begin{enumerate}
+    \item \textbf{Elucidate Soil's Role in Methane Signature Modification:} Conduct a comprehensive investigation into the influence of environmental and soil characteristics, including soil properties, vegetation cover, precipitation, and temperature, on the visibility and detectability of methane emissions in satellite imagery. This endeavor aims to unravel the intricate interplay between soil attributes and methane signatures, thereby enhancing the accuracy of satellite-based emission monitoring.
+    
+    \item \textbf{Advance Causal Machine Learning Methodologies:} Spearhead the development of innovative causal machine learning models tailored to dissect the complex dynamics of methane emissions. Unlike conventional approaches, these models will not only predict but also unravel the underlying processes of methane release, significantly improving the understanding of emission patterns and facilitating detection enhancements.
+    
+    \item \textbf{Forge a Novel Causal Inference Framework:} Architect a pioneering framework that seamlessly integrates causal inference with satellite data analysis, enabling a detailed dissection of methane emission sources and pathways. This framework transcends the limitations of correlation-based studies, offering nuanced insights into the causative factors behind emission trends and facilitating robust detection methodologies.
+    
+    \item \textbf{Enhance Interpretability and Explainability for Liability Purposes:} Harness the enhanced analytical capabilities afforded by causal inference to improve the interpretability and explainability of methane emission sources and mechanisms. This objective is pivotal in contexts requiring precise attribution of environmental impact for liability purposes, ensuring a clear understanding of responsibility in methane emission scenarios.
+
+    \item \textbf{Perform a Comprehensive Review on Advances and Challenges in Methane Monitoring from Satellite Data:} Conduct an exhaustive literature review examining methodologies and technologies utilized in methane detection and quantification from satellite imagery. This review encompasses remote sensing techniques, sensor technologies, data processing, and analysis methodologies. It also explores applications and case studies, including quantifying anomalous methane point sources, large-scale emission mapping, emission inventory validation, and climate change studies. Furthermore, to critically assess available datasets for methane monitoring, distinguishing between those readily compatible with methane monitoring techniques and those requiring further refinement or adaptation. This evaluation aims to identify gaps and challenges in current datasets, informing future data collection and processing strategies for enhanced methane monitoring capabilities.
+
+    \item \textbf{Contribute to New Standards in Environmental Monitoring:} Contribute cutting-edge tools and methodologies to the domain of Earth observation, aligning with the strategic goals of space agencies and environmental monitoring initiatives. By refining the precision and interpretability of satellite-based methane detection, this research aims to establish new paradigms in environmental science, emphasizing the role of explainability in environmental liability and stewardship.
+\end{enumerate}
+
+These objectives collectively underscore the ambition to not only advance technical capabilities in methane monitoring but also to elevate the role of causal analysis in enhancing clarity and accountability in environmental impact assessments. Through these endeavors, the project aims to make substantive contributions to the field, fostering advancements in technology, methodology, and practical application in aerospace engineering and beyond.
 
 
+\section{Approach}
+
+%TODO move this somewhere
+%%%%%%%%%%%%%%%%%%  Why ML?
+However, the complexity of detecting and quantifying methane emissions from satellite images calls for sophisticated machine learning algorithms. This need coincides with the growing demand within the machine learning community for models that are not only effective but also transparent and interpretable \cite{roscher_explainable_2020, hall_review_2022}. 
+
+Machine learning (ML) has emerged as a critical component in this shift, offering advanced capabilities for processing and analyzing the vast amounts of data generated by satellite-based systems. With ML, organizations can not only improve the accuracy and efficiency of methane detection \cite{groshenry_detecting_2022, gu_methane_2021} but also uncover patterns and trends that would be difficult to discern through traditional methods \cite{psomouli_methane_2023, lauvaux_global_2022, groshenry_detecting_2022}. As a result, ML-based approaches are playing a pivotal role in advancing satellite-based methane monitoring, supporting efforts to meet regulatory requirements, and driving progress toward corporate sustainability and climate change mitigation. Advances in technology, particularly the use of machine learning approaches, have further enhanced the detection of methane emissions from satellite imagery \cite{irakulis_loitxate_satellites_2022, maasakkers_using_2022, sherwin_single_blind_2023, joyce_using_2023, Prasad2020, wu2020deep, kumar_deep_2020}.
 
 
-
-\section{Review of Relevant Literature}
-Key papers were reviewed and synthesized to underpin the research on integrating Causal Machine Learning (CML) with Generative AI for methane emission monitoring using satellite imagery.
+\section{Related work}
+%TODO short introduction
 
 The evolution of causal inference methodologies and their application in diverse fields, particularly in environmental monitoring using satellite imagery, forms the cornerstone of this thesis. This research stands at the confluence of several pioneering studies, each contributing unique perspectives and methodological insights vital for understanding methane emissions.
 
@@ -77,7 +125,14 @@ Furthermore, the simulation studies in \cite{jerzak_integrating_2023} provide a 
 These studies collectively chart the course for this research, each contributing essential elements to the framework of causal analysis in the context of methane emissions from satellite imagery. They not only inform the methodological approach of this thesis but also illuminate the interdisciplinary nature of research at the intersection of environmental science, causal inference, and satellite imaging.
 
 
+\section{Expected contributions}
+
 %%%%%
+
+\section{Document structure}
+
+
+\section{Research plan}
 
 %%%%%
 
