@@ -214,6 +214,13 @@
 \newcommand*{\th@othersupervisor}{\relax} % command is optional
 
 
+% DEFINE COMMAND FOR: supervisor affiliations
+\newcommand*{\supervisoraffiliation}[1]{\th@StoreIn{\th@supervisoraffiliation}{#1}}
+\newcommand*{\th@supervisoraffiliation}{\relax} % command is optional
+
+\newcommand{\othersupervisoroneaffiliation}[1]{\def\@othersupervisoroneaffiliation{#1}}
+\newcommand{\othersupervisortwoaffiliation}[1]{\def\@othersupervisortwoaffiliation{#1}}
+
 %
 % DEFINE COMMAND FOR: Examination Committee
 \newcommand*{\chairperson}[1]{\th@StoreIn{\th@chairperson}{#1}}
@@ -235,7 +242,7 @@
 %
 % DEFINE COMMAND FOR: Thesis type, depending on language
 \newcommand{\thesistypelang}{\IfLanguageName{english}
-		{Thesis to obtain the Doctoral Degree in}
+		{CAT - PhD Thesis Proposal}
 		{Disserta\c{c}\~ao para obten\c{c}\~ao do Grau de Mestre em}
         }
 %

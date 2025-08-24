@@ -88,14 +88,34 @@
 \begin{textblock*}{16cm}(2.5cm,20.5cm)
     \centering
     \begin{setfont}{12}
-        \tlangSupervisors \th@supervisor % Always print the main supervisor
+        \textbf{\tlangSupervisors}
+        
+        \vspace{0.3cm}
+        
+        % Main supervisor
+        \textbf{\th@supervisor}
+        \ifthenelse{\equal{\th@supervisoraffiliation}{\relax}}{\relax}{
+            \\ \textit{\small\th@supervisoraffiliation}
+        }
+        
+        % First co-supervisor
         \ifdefined\@othersupervisorone
-            \\ % New line for additional supervisor
-             \@othersupervisorone
+            \vspace{0.4cm}
+            
+            \textbf{\@othersupervisorone}
+            \ifdefined\@othersupervisoroneaffiliation
+                \\ \textit{\small\@othersupervisoroneaffiliation}
+            \fi
         \fi
+        
+        % Second co-supervisor
         \ifdefined\@othersupervisortwo
-            \\ % New line for another additional supervisor
-             \@othersupervisortwo
+            \vspace{0.4cm}
+            
+            \textbf{\@othersupervisortwo}
+            \ifdefined\@othersupervisortwoaffiliation
+                \\ \textit{\small\@othersupervisortwoaffiliation}
+            \fi
         \fi
     \end{setfont}
 \end{textblock*}

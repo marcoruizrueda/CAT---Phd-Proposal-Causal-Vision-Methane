@@ -50,7 +50,7 @@
 % Print Titlepage (Cover)
 \maketitle
 \thispagestyle{empty} % the following page without header or footer
-\cleardoublepage
+%\cleardoublepage
 %
 % -----------------------------------------------------------------------------
 % THE COPYRIGHT DECLARATION
@@ -115,6 +115,9 @@
 % reposition baseline
 \renewcommand{\baselinestretch}{1.5}
 % -----------------------------------------------------------------------------
+% Add a top-level bookmark to group front matter items
+\pdfbookmark[0]{Front Matter}{frontmatter}
+% -----------------------------------------------------------------------------
 % List of Figures
 \pdfbookmark[1]{List of Figures}{lof}
 \listoffigures
@@ -134,11 +137,11 @@
 % -----------------------------------------------------------------------------
 % % List of Symbols
 % Terms defined in file: /Chapters/Thesis-MSc-Glossary.tex
-\printglossary[title=\listofsymbolsname,type=symbols,style=altlongragged4col,nogroupskip,nonumberlist]
+%\printglossary[title=\listofsymbolsname,type=symbols,style=altlongragged4col,nogroupskip,nonumberlist]
 % If Printing on DOUBLE SIDED pages, the second page should be white.
-\clearpage
+%\clearpage
 % Otherwise, comment the following command:
-\cleardoublepage
+%\cleardoublepage
 % -----------------------------------------------------------------------------
 % List of Algorithms
 % If not used, comments the lines!
@@ -154,18 +157,18 @@
 % Listings
 % If not used, comments the lines!
 % Requires packages listings
-\pdfbookmark[1]{Listings}{lol}
-\lstlistoflistings
-\cleardoublepage
+%%\pdfbookmark[1]{Listings}{lol}
+%%\lstlistoflistings
+%%\cleardoublepage
 % -----------------------------------------------------------------------------
 % % List of acronyms
-\pdfbookmark[1]{Acronyms}{loac}
-\chapter*{\tlangAcronyms}
-\input{./Chapters/Thesis-MSc-Acronyms.tex}
+%\pdfbookmark[1]{Acronyms}{loac}
+%\chapter*{\tlangAcronyms}
+%\input{./Chapters/Thesis-MSc-Acronyms.tex}
 % If Printing on DOUBLE SIDED pages, the second page should be white.
-\clearpage
+%\clearpage
 % Otherwise, comment the following command:
-\cleardoublepage
+%\cleardoublepage
 % -----------------------------------------------------------------------------
 % Glossary
 % Terms defined in file: /Chapters/Thesis-MSc-Glossary.tex
@@ -262,13 +265,13 @@
 \input{./Chapters/Thesis-MSc-AppendixA.tex}
 %% If Printing on DOUBLE SIDED pages, the second page should be white.
 %% Otherwise, comment the following command:
-\cleardoublepage
+%\cleardoublepage
 %% Second Appendix
 %\pdfbookmark[1]{Appendix B}{appendix}
 \input{./Chapters/Thesis-MSc-AppendixB.tex}
 %% If Printing on DOUBLE SIDED pages, the second page should be white.
 %% Otherwise, comment the following command:
-\cleardoublepage
+%\cleardoublepage
 
 % -----------------------------------------------------------------------------
 % And this is THE END of the IST Thesis Document

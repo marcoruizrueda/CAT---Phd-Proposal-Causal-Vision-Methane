@@ -24,6 +24,15 @@
 % The 'iflang' package is used to help determine the language being used. 
 \usepackage{iflang}
 
+\usepackage{upgreek}            % provides upright Greek letters
+\usepackage{chemgreek}          % needed for chemmacros compatibility
+\usepackage{chemmacros}
+\chemsetup{greek=upgreek}       % tell chemmacros to use upgreek mapping
+
+\usepackage{tabularx}
+\usepackage{rotating}
+
+
 % -----------------------------------------------------------------------------
 % PACKAGE scrbase:
 % -----------------------------------------------------------------------------
@@ -241,11 +250,11 @@
 
 % Special style to print trailing dots before locations list
 \makeatletter
-\newglossarystyle{mystyle}{%
-  \setglossarystyle{altlist}%
-  \renewenvironment{theglossary}{%
+\newglossarystyle{mystyle}{
+  \setglossarystyle{altlist}
+  \renewenvironment{theglossary}{
   \begin{description}[style=standard,labelindent=0pt,itemsep=5pt]%
-  }%
+  }
   {\end{description}}
   \renewcommand*{\glossentry}[2]{%
     \item[\glsentryitem{##1}%
@@ -265,6 +274,23 @@
 % GLOBAL FORMATTING OF THE THESIS DOCUMENT before using FANCY stuff
 % Load Titlepage definition
 \usepackage{./Thesis-MSc-cover-titlepage}
+
+
+
+
+\usepackage{glossaries}
+\usepackage{pdfpages}
+\usepackage{tikz}
+\usetikzlibrary{mindmap}
+\usepackage{ragged2e}  % For \RaggedRight to allow better text wrapping without overfull hboxes
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+
+
+
+%\usepackage{natbib}
+
 
 % Set paragraph counter to alphanumeric mode
 % DO NOT CHANGE these lines, otherwise the document will not respect the Guide

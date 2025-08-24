@@ -1,39 +1,312 @@
-% #############################################################################
-% This is the Glossary Definition List
-% !TEX root = ../main.tex
-% #############################################################################
-% 
-%%%%%%%%%%%%%%%%% LIST OF Glossary Terms  %%%%%%%%%%%%%
-
-\newglossaryentry{maths}{%
-    name={mathematics},
-    description={Mathematics is what mathematicians do}
+%%%%%%%%%%%%%%%%% LIST OF GLOSSARY TERMS  %%%%%%%%%%%%%
+% Methane-specific
+\newglossaryentry{methane}{
+  name={Methane (CH\textsubscript{4})},
+  description={Potent greenhouse gas produced by natural (wetlands, termites, seeps) and anthropogenic (fossil fuel extraction, agriculture, waste) sources},
+  symbol={}
 }
 
-\newglossaryentry{LaTeX}{%
-    name={LaTeX},
-    description={LaTeX It is a mark up language specially suited for scientific documents as it can correctly format documents with all the typographical rules}
+\newglossaryentry{xch4}{
+  name={Column-averaged dry-air mole fraction of methane (XCH\textsubscript{4})},
+  description={Column-averaged dry-air mole fraction of methane derived from nadir-looking satellites (e.g., TROPOMI, GOSAT)},
+  sort={xch4}
 }
 
+% Atmospheric chemistry & radiative forcing
+\newglossaryentry{oh}{
+  name={Hydroxyl radical (OH)},
+  description={Primary atmospheric oxidant controlling the lifetime of methane and many pollutants},
+  sort={oh}
+}
 
-\newglossaryentry{formula}{%
-    name=formula,
-    description={A mathematical expression}
+\newglossaryentry{gwp}{
+  name={Global Warming Potential (GWP)},
+  description={Integrated radiative forcing of a greenhouse gas relative to CO\textsubscript{2} over a specified time horizon (usually 20--100~years)},
+  sort={gwp}
+}
+
+\newglossaryentry{rf}{
+  name={Radiative Forcing (RF)},
+  description={Perturbation of Earth’s radiative balance (W\,m\textsuperscript{-2}) caused by natural or anthropogenic drivers},
+  sort={rf}
+}
+
+\newglossaryentry{aod}{
+  name={Aerosol Optical Depth (AOD)},
+  description={Column-integrated extinction of solar radiation by aerosol scattering and absorption},
+  sort={aod}
+}
+
+\newglossaryentry{column_averaged}{
+  name={Column-averaged dry-air mole fraction},
+  description={Vertical average of a trace-gas concentration with respect to dry air; standard unit for XCH\textsubscript{4}, XCO\textsubscript{2}, etc.},
+  sort={column_averaged}
+}
+
+% Satellite missions & instruments
+\newglossaryentry{tropomi}{
+  name={TROPOspheric Monitoring Instrument (TROPOMI)},
+  description={Hyperspectral nadir sensor aboard Sentinel-5P providing global daily maps of atmospheric constituents at 5.5$\times$7~km},
+  sort={tropomi}
+}
+
+\newglossaryentry{gosat}{
+  name={Greenhouse Gases Observing Satellite (GOSAT)},
+  description={Japanese mission for high-spectral-resolution SWIR/TIR soundings of CO\textsubscript{2} and CH\textsubscript{4}},
+  sort={gosat}
+}
+
+\newglossaryentry{modis}{
+  name={Moderate Resolution Imaging Spectroradiometer (MODIS)},
+  description={NASA multispectral instrument on Terra/Aqua providing global land, ocean and atmosphere products},
+  sort={modis}
+}
+
+\newglossaryentry{wfmd}{
+  name={Weighting-Function Modified DOAS (WFMD)},
+  description={Retrieval algorithm for XCH\textsubscript{4}/XCO\textsubscript{2}},
+  sort={wfmd}
+}
+
+\newglossaryentry{remotec}{
+  name={Remote sensing retrieval algorithm (RemoTeC)},
+  description={Full-physics optimal-estimation suite for trace-gas retrievals},
+  sort={remotec}
+}
+
+\newglossaryentry{swir}{
+  name={Short-Wave Infrared (SWIR)},
+  description={Spectral region ($\approx$1.0--2.5\,µm) exploited for atmospheric CH\textsubscript{4}, CO, CO\textsubscript{2} retrievals},
+  sort={swir}
+}
+
+\newglossaryentry{sentinel5p}{
+  name={Sentinel-5 Precursor (S5P)},
+  description={ESA platform carrying TROPOMI (launched 2017) for operational atmospheric composition monitoring},
+  sort={sentinel5p}
+}
+
+% Causal-inference toolbox
+\newglossaryentry{causal_inference}{
+  name={Causal inference},
+  description={Statistical framework for estimating directional cause--effect relationships in observational data},
+  sort={causal_inference}
+}
+
+\newglossaryentry{granger_causality}{
+  name={Granger causality (GC)},
+  description={Test where X “Granger-causes” Y if past X improves the prediction of Y beyond past Y alone},
+  sort={granger_causality}
+}
+
+\newglossaryentry{transfer_entropy}{
+  name={Transfer Entropy (TE)},
+  description={Information-theoretic measure of directed coupling capturing non-linear dependencies in time series},
+  sort={transfer_entropy}
+}
+
+\newglossaryentry{pcmci}{
+  name={PC algorithm with Momentary Conditional Independence (PCMCI)},
+  description={Scalable causal discovery method for multivariate time series},
+  sort={pcmci}
+}
+
+\newglossaryentry{confounding}{
+  name={Confounding},
+  description={Bias arising from variables that affect both the putative cause and effect},
+  sort={confounding}
+}
+
+\newglossaryentry{autocorrelation}{
+  name={Autocorrelation},
+  description={Correlation of a variable with its own lagged values},
+  sort={autocorrelation}
+}
+
+\newglossaryentry{stationarity}{
+  name={Stationarity},
+  description={Property of a time series whose statistical moments do not change with time},
+  sort={stationarity}
+}
+
+% Biogeochemical processes
+\newglossaryentry{methanogenesis}{
+  name={Methanogenesis},
+  description={Anaerobic microbial pathway producing CH\textsubscript{4} from H\textsubscript{2}/CO\textsubscript{2}, acetate or methylated compounds},
+  sort={methanogenesis}
+}
+
+\newglossaryentry{methanotrophic}{
+  name={Methanotroph},
+  description={Aerobic or anaerobic bacteria that oxidise methane as an energy source},
+  sort={methanotrophic}
+}
+
+\newglossaryentry{wetlands}{
+  name={Wetlands},
+  description={Water-saturated ecosystems and the largest natural CH\textsubscript{4} source},
+  sort={wetlands}
+}
+
+\newglossaryentry{enteric_fermentation}{
+  name={Enteric fermentation},
+  description={Microbial digestion in ruminants producing CH\textsubscript{4} as a by-product},
+  sort={enteric_fermentation}
+}
+
+\newglossaryentry{biomass_burning}{
+  name={Biomass burning},
+  description={Combustion of vegetation in wildfires, agriculture and energy use; emits CH\textsubscript{4}, CO, NO\textsubscript{x}, aerosols},
+  sort={biomass_burning}
+}
+
+\newglossaryentry{ebullition}{
+  name={Ebullition},
+  description={Bubble-mediated gas release from sediments or water columns},
+  sort={ebullition}
+}
+
+% Land-cover classes
+\newglossaryentry{croplands}{
+  name={Croplands},
+  description={Cultivated fields for annual or perennial crops; anthropogenic CH\textsubscript{4} and N\textsubscript{2}O sources},
+  sort={croplands}
+}
+
+\newglossaryentry{savannas}{
+  name={Savannas},
+  description={Seasonally dry grasslands with scattered trees; intermediate natural CH\textsubscript{4} emissions},
+  sort={savannas}
+}
+
+\newglossaryentry{shrublands}{
+  name={Shrublands},
+  description={Ecosystems dominated by shrubs and low woody vegetation; typically low CH\textsubscript{4} flux},
+  sort={shrublands}
+}
+
+\newglossaryentry{urban_areas}{
+  name={Urban areas},
+  description={Built environments with impervious surfaces; indirect CH\textsubscript{4} sources (landfills, leaks)},
+  sort={urban_areas}
+}
+
+% Statistics, units & technical terms
+\newglossaryentry{bottom_up}{
+  name={Bottom-up estimates},
+  description={Emission estimates derived from activity data, land-surface models and inventories},
+  sort={bottom_up}
+}
+
+\newglossaryentry{top_down}{
+  name={Top-down estimates},
+  description={Inverse modelling constrained by atmospheric concentration observations},
+  sort={top_down}
+}
+
+\newglossaryentry{tg_ch4_yr}{
+  name={Teragrams of methane per year (Tg\,CH\textsubscript{4}\,yr\textsuperscript{-1})},
+  description={Standard unit for annual global CH\textsubscript{4} emissions; 1~Tg $=10^{12}$~g},
+  sort={tg_ch4_yr}
+}
+
+\newglossaryentry{ppb}{
+  name={Parts per billion (ppb)},
+  description={Mole fraction of $10^{-9}$; standard unit for atmospheric CH\textsubscript{4}},
+  sort={ppb}
+}
+
+\newglossaryentry{netcdf}{
+  name={Network Common Data Form (NetCDF)},
+  description={Self-describing binary format for array-oriented scientific data},
+  sort={netcdf}
+}
+
+\newglossaryentry{gee}{
+  name={Google Earth Engine (GEE)},
+  description={Cloud platform for planetary-scale geospatial analysis},
+  sort={gee}
+}
+
+% Special categories
+\newglossaryentry{super_emitters}{
+  name={Super-emitters},
+  description={Disproportionately large methane point sources detectable by high-resolution satellites},
+  sort={super_emitters}
+}
+
+\newglossaryentry{la_nina}{
+  name={La Niña},
+  description={Cold phase of the El Niño--Southern Oscillation influencing global CH\textsubscript{4} budgets},
+  sort={la_nina}
+}
+
+\newglossaryentry{eddy_covariance}{
+  name={Eddy covariance},
+  description={Micrometeorological method measuring surface--atmosphere fluxes at high frequency},
+  sort={eddy_covariance}
+}
+
+\newglossaryentry{inverse_modeling}{
+  name={Inverse modelling},
+  description={Technique that infers surface emissions from atmospheric observations and transport models},
+  sort={inverse_modeling}
+}
+
+\newglossaryentry{quality_flags}{
+  name={Quality flags},
+  description={Per-pixel metadata in satellite products for screening unreliable retrievals},
+  sort={quality_flags}
+}
+
+\newglossaryentry{counterfactual}{
+  name={Counterfactual},
+  description={Concept from the potential outcomes framework defining causation in terms of hypothetical alternative scenarios; $X$ causes $Y$ if, holding all else constant, intervening to change $X$ would change the distribution of $Y$},
+  sort={counterfactual}
+}
+
+\newglossaryentry{interventional_perspective}{
+  name={Interventional perspective},
+  description={View of causation emphasizing that causal relationships are those that remain stable under deliberate manipulations or interventions on the cause variable},
+  sort={interventional_perspective}
+}
+
+\newglossaryentry{temporal_precedence}{
+  name={Temporal precedence principle},
+  description={Principle stating that causes must precede their effects in time, with the relevant time scale depending on the system under study},
+  sort={temporal_precedence}
+}
+
+\newglossaryentry{causal_markov_condition}{
+  name={Causal Markov condition},
+  description={Assumption that, conditional on its direct causes (parents in a causal graph), a variable is independent of its non-descendants},
+  sort={causal_markov_condition}
+}
+
+\newglossaryentry{faithfulness_assumption}{
+  name={Faithfulness assumption},
+  description={Assumption that all conditional independencies in the observed data correspond to those implied by the true causal graph, excluding accidental independencies due to parameter cancellations},
+  sort={faithfulness_assumption}
+}
+
+\newglossaryentry{predictive_causality}{
+  name={Predictive causality},
+  description={Operational definition of causality in time series where $X$ is said to cause $Y$ if past values of $X$ improve the prediction of $Y$ beyond using past $Y$ alone},
+  sort={predictive_causality}
 }
 
 
 %%%%%%%%%%%%%%%%% LIST OF SYMBOLS  %%%%%%%%%%%%%
-% Here you can define the Symbols used in the document
 \newglossaryentry{diam0}{%
-  name={\ensuremath{D_0}},
-  description={Initial Diameter},
-  symbol={\ensuremath{\mu{m}}},
+  name={Initial diameter (\ensuremath{D_0})},
+  description={Initial particle diameter},
+  symbol={\ensuremath{\mu\text{m}}},
   type=symbols
 }
 
 \newglossaryentry{surfarea}{%
-    name={\ensuremath{A_s}},
-    description={Surface Area},
-    symbol={\ensuremath{\mu{m}^2}},
-    type=symbols
+  name={Surface area (\ensuremath{A_s})},
+  description={Particle surface area},
+  symbol={\ensuremath{\mu\text{m}^2}},
+  type=symbols
 }
