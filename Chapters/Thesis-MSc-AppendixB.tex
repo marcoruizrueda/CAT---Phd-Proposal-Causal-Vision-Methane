@@ -7,19 +7,17 @@
 
 This appendix presents the complete implementation of the algorithms used in the methane detection and analysis pipeline. The code is organized according to the workflow steps described in the main text. All scripts and additional implementation details are available in the public repository: \url{https://github.com/marcoruizrueda-ist/PHD}.
 
-
-
 \section{Step 1: Data Extraction from NetCDF Files}
 \label{sec:appendixB_step1}
 
 The first step involves extracting methane and carbon monoxide measurements from the WFMD (Wetland Flux and Methane Dataset) NetCDF files. This algorithm processes files in parallel to handle the large dataset efficiently.
 
-\begin{lstlisting}[language=Python, caption=Parallel NetCDF Data Extraction Algorithm, label=alg:step01_extract]
+\begin{lstlisting}[language=Python, caption=Parallel NetCDF Data Extraction Algorithm, label=alg:step01_extract, breaklines=true]
 #!/usr/bin/env python
 """
-Parallel NetCDF extractor for WFMD WFM-DOAS files
-Extracts methane and carbon monoxide measurements from NetCDF files
-with parallel processing for large-scale datasets.
+Parallel NetCDF extractor for WFMD satellite data.
+Extracts methane and carbon monoxide measurements from large NetCDF files
+using parallel processing for improved performance.
 
 Usage: python step01_extract.py --workers 200 --chunk-id 55 --n-chunks 100
 """
@@ -30,41 +28,41 @@ import numpy as np
 import jdcal
 from tqdm import tqdm
 
-# Configuration parameters
-DATA_DIR = "data/wfmd_dataset"  # Relative path to dataset
-OUTFILE  = "methane_all01.txt"
+# Configuration
+DATA_DIR = "data/wfmd_dataset"  # Path to WFMD NetCDF files
+OUTFILE  = "methane_all01.txt"   # Output file with extracted measurements
 
 def extract_one(nc_path_and_start_idx):
     """
-    Extract data from one NetCDF file using standardized methodology.
+    Extract methane and CO data from a single NetCDF file.
     
-    This function processes a single NetCDF file and converts the data
-    to the required format for downstream analysis. It handles time
-    conversion, variable extraction, and data formatting.
+    Processes one file by reading time, coordinates, and measurement variables,
+    converting timestamps to Julian Day format, and formatting output for
+    downstream analysis.
     
     Args:
-        nc_path_and_start_idx: Tuple containing (file_path, start_index)
+        nc_path_and_start_idx: Tuple of (file_path, global_start_index)
         
     Returns:
-        Tuple of (formatted_rows, measurement_count)
+        Tuple of (formatted_data_rows, row_count)
     """
     nc_path, start_idx = nc_path_and_start_idx
     
     try:
-        # Open and read the NetCDF dataset
+        # Load NetCDF dataset
         ds = xr.open_dataset(nc_path)
         
-        # Extract and convert time values to Julian Day format
-        # This ensures temporal consistency across the entire dataset
+        # Convert timestamps to Julian Day for consistency
+        # Ensures uniform time representation across all files
         time = ds['time'].values
         times = []
         for i in range(len(time)):
             time2 = str(time[i])
-            # Convert calendar date to Julian Day using jdcal library
+            # Convert calendar date to Julian Day
             times.append(jdcal.gcal2jd(time2[0:4], time2[5:7], time2[8:10])[1])
         
-        # Extract all required variables from the NetCDF file
-        # These include methane concentration, uncertainty, carbon monoxide, and coordinates
+        # Extract measurement variables and coordinates
+        # Includes methane, CO concentrations, uncertainties, and spatial coordinates
         xch4 = ds['xch4'].values
         xch4u = ds['xch4_uncertainty'].values
         xco = ds['xco'].values
@@ -72,16 +70,17 @@ def extract_one(nc_path_and_start_idx):
         latitude = ds['latitude'].values
         longitude = ds['longitude'].values
         
-        # Build output rows with global indexing to maintain data integrity
-        # Each row contains all measurements for a single observation point
+        # Format output rows with global indexing
+        # Each row contains all variables for one measurement point
         rows = []
         for i in range(len(xch4)):
             global_idx = start_idx + i
-            # Format each row with comma-separated values
-            line = f"{global_idx}, {times[i]}, {longitude[i]}, {latitude[i]}, {xch4[i]}, {xch4u[i]}, {xco[i]}, {xcou[i]}\n"
+            # Format as CSV row with global index
+            line = f"{global_idx}, {times[i]}, {longitude[i]}, {latitude[i]}, " \
+                   f"{xch4[i]}, {xch4u[i]}, {xco[i]}, {xcou[i]}\n"
             rows.append(line)
         
-        # Close the dataset to free memory
+        # Clean up resources
         ds.close()
         return rows, len(xch4)
         
@@ -91,23 +90,23 @@ def extract_one(nc_path_and_start_idx):
 
 def main(n_workers: int = 8, chunk_id: int = 0, n_chunks: int = 1):
     """
-    Main function that orchestrates the parallel processing of NetCDF files.
+    Main processing function for parallel NetCDF extraction.
     
-    This function handles file discovery, parallel execution, and output management.
-    It implements chunked processing for distributed computing environments.
+    Coordinates file discovery, parallel processing, and output management.
+    Supports chunked processing for distributed computing environments.
     
     Args:
-        n_workers: Number of parallel workers
-        chunk_id: Current chunk identifier for distributed processing
-        n_chunks: Total number of chunks for workload distribution
+        n_workers: Number of parallel processing workers
+        chunk_id: Current chunk identifier for distributed processing  
+        n_chunks: Total number of processing chunks
     """
-    # Find all NetCDF files in the data directory recursively
+    # Discover all NetCDF files recursively
     files = sorted(glob.glob(os.path.join(DATA_DIR, "**/*.nc"), recursive=True))
     if n_chunks > 1:
         files = np.array_split(files, n_chunks)[chunk_id]
     
-    # Pre-calculate file sizes to determine global indexing
-    # This ensures that each measurement has a unique global index
+    # Pre-calculate file sizes for global indexing
+    # Ensures unique global indices across all measurements
     print("Pre-calculating file sizes for global indexing...")
     file_sizes = []
     for file_path in tqdm(files, desc="Calculating sizes"):
@@ -121,13 +120,12 @@ def main(n_workers: int = 8, chunk_id: int = 0, n_chunks: int = 1):
     start_indices = np.cumsum([0] + file_sizes[:-1])
     file_data = list(zip(files, start_indices))
     
-    # Determine write mode based on chunk processing
+    # Determine write mode for chunked processing
     write_mode = 'w' if chunk_id == 0 else 'a'
     if write_mode == 'w':
         pathlib.Path(OUTFILE).unlink(missing_ok=True)
     
-    # Process files in parallel using ProcessPoolExecutor
-    # This significantly speeds up processing for large datasets
+    # Execute parallel processing
     print(f"Processing {len(files)} files with {n_workers} workers...")
     with open(OUTFILE, write_mode) as fh:
         with cf.ProcessPoolExecutor(max_workers=n_workers) as executor:
@@ -135,11 +133,14 @@ def main(n_workers: int = 8, chunk_id: int = 0, n_chunks: int = 1):
                 fh.writelines(rows)
 
 if __name__ == "__main__":
-    # Set up command line argument parsing for flexible execution
+    # Command line interface setup
     p = argparse.ArgumentParser(description="Extract methane data from NetCDF files")
-    p.add_argument("--workers",  type=int, default=int(os.environ.get("SLURM_CPUS_ON_NODE", 200)))
-    p.add_argument("--chunk-id", type=int, default=int(os.environ.get("SLURM_ARRAY_TASK_ID", 0)))
-    p.add_argument("--n-chunks", type=int, default=int(os.environ.get("SLURM_ARRAY_TASK_COUNT", 1)))
+    p.add_argument("--workers",  type=int, 
+                   default=int(os.environ.get("SLURM_CPUS_ON_NODE", 200)))
+    p.add_argument("--chunk-id", type=int, 
+                   default=int(os.environ.get("SLURM_ARRAY_TASK_ID", 0)))
+    p.add_argument("--n-chunks", type=int, 
+                   default=int(os.environ.get("SLURM_ARRAY_TASK_COUNT", 1)))
     args = p.parse_args()
     main(args.workers, args.chunk_id, args.n_chunks)
 \end{lstlisting}
@@ -149,12 +150,15 @@ if __name__ == "__main__":
 
 The second step adds land cover classification data to each measurement using Google Earth Engine's MODIS land cover dataset. This algorithm processes data in chunks to handle the large dataset efficiently while maintaining reliability.
 
-\begin{lstlisting}[language=Python, caption=Land Cover Classification Addition Algorithm, label=alg:step02_add_lc]
+\begin{lstlisting}[language=Python, caption=Land Cover Classification Addition Algorithm, label=alg:step02_add_lc, breaklines=true]
 #!/usr/bin/env python3
 """
-Land cover classification addition with enhanced reliability
-Adds MODIS land cover data to methane measurements using Google Earth Engine.
-Implements robust error handling and chunked processing for large datasets.
+Land cover classification addition using Google Earth Engine.
+Adds MODIS land cover data to methane measurements by querying
+spatial and temporal Earth Engine collections.
+
+Implements chunked processing and robust error handling for 
+large-scale datasets with automatic retry logic.
 """
 
 from __future__ import annotations
@@ -164,24 +168,24 @@ from collections import defaultdict
 import numpy as np, pandas as pd, ee
 from tqdm import tqdm
 
-# Configuration parameters for the land cover classification process
-SCALE = 3_500          # Spatial resolution in meters for Earth Engine queries
-CHUNK_SIZE = 5_000     # Number of measurements to process in each chunk
-MAX_RETRIES = 5        # Maximum number of retry attempts for failed queries
-RETRY_DELAY = 4        # Delay between retry attempts in seconds
+# Processing configuration
+SCALE = 3_500          # Earth Engine spatial resolution (meters)
+CHUNK_SIZE = 5_000     # Measurements per processing chunk
+MAX_RETRIES = 5        # Maximum retry attempts for failed queries
+RETRY_DELAY = 4        # Delay between retries (seconds)
 
-# Set up logging configuration for monitoring and debugging
+# Logging configuration
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s  %(levelname)s | %(message)s",
                     datefmt="%H:%M:%S")
 LOG = logging.getLogger("land_cover_classification")
 
-# Performance tracking utilities for monitoring processing efficiency
+# Performance tracking utilities
 tstat: dict[str,list[float]] = defaultdict(list)
 tic = time.perf_counter
 def toc(t0: float, key: str): tstat[key].append(time.perf_counter() - t0)
 def show_timing():
-    """Display detailed timing statistics for performance analysis"""
+    """Display timing statistics for performance monitoring."""
     print("\nTiming breakdown:")
     tot = tstat["TOTAL_RUN"][0] if tstat["TOTAL_RUN"] else 0
     for k,v in tstat.items():
@@ -190,51 +194,51 @@ def show_timing():
         print(f"{k:>12s}: {s:6.1f}s * {len(v)} calls * mean {s/len(v):.3f}s")
     print(f"TOTAL_RUN : {tot:.1f}s")
 
-# Initialize Google Earth Engine for accessing MODIS land cover data
+# Initialize Google Earth Engine
 try: 
     ee.Initialize()
 except Exception:
     ee.Authenticate(); ee.Initialize()
-LOG.info("Earth Engine initialized")
+LOG.info("Earth Engine initialized successfully")
 
-# Import the MODIS land cover classification collection
-# This provides global land cover data at 500m resolution
+# Load MODIS land cover collection
+# Provides global land cover classifications at 500m resolution
 lc_collection = ee.ImageCollection('MODIS/006/MCD12Q1')
 
 def process_chunk_karoff(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Process one chunk of measurements using standardized methodology.
+    Process measurement chunk and add land cover classifications.
     
-    This function adds land cover classification to each measurement point
-    by querying the MODIS land cover dataset through Google Earth Engine.
-    Implements robust error handling and retry logic for reliability.
+    Queries Earth Engine for MODIS land cover data at measurement coordinates
+    within temporal windows. Implements spatial and temporal filtering with
+    robust error handling for API reliability.
     
     Args:
-        df: DataFrame containing measurement data
+        df: DataFrame with measurement coordinates and timestamps
         
     Returns:
         DataFrame with added land cover classification column
     """
     t0 = tic()
     
-    # Handle empty chunks gracefully
+    # Handle empty chunks
     if df.empty:
         LOG.warning("Empty chunk encountered, skipping")
         return df
     
-    # Extract coordinate and time information from the dataframe
+    # Extract coordinates and time data
     timel = df['times']
     x = df['lon']
     y = df['lat']
-    df.insert(8, 'lc', 0)  # Add land cover column with default value
+    df.insert(8, 'lc', 0)  # Initialize land cover column
     xy = []
     
-    # Define time window for land cover query (\pm 183 days from first measurement)
-    # This ensures we capture seasonal variations in land cover
+    # Define temporal window for land cover query (plus/minus 183 days)
+    # Captures seasonal variations in land cover
     time1 = timel.iloc[0] - 183
     time2 = timel.iloc[0] + 183
     
-    # Convert Julian Day to calendar dates for Earth Engine query
+    # Convert Julian Day to calendar dates for Earth Engine
     y1 = jdcal.jd2gcal(2400000.5, time1)[0]
     m1 = jdcal.jd2gcal(2400000.5, time1)[1]
     d1 = jdcal.jd2gcal(2400000.5, time1)[2]
@@ -250,69 +254,73 @@ def process_chunk_karoff(df: pd.DataFrame) -> pd.DataFrame:
     for i in df.index:
         xy.append([x[i], y[i]])
     
-    # Create Earth Engine geometry and query land cover data
+    # Create Earth Engine geometry and filter collection
     poi = ee.Geometry.MultiPoint(xy)
     lc_poi = lc_collection.filterDate(i_date, f_date).select('LC_Type1')
     
-    # Implement retry logic for robust Earth Engine queries
+    # Query Earth Engine with retry logic
     for attempt in range(MAX_RETRIES):
         try:
-            # Query land cover data for all points in the chunk
+            # Execute land cover query
             lc_r_poi = lc_poi.getRegion(poi, SCALE).getInfo()
             
-            # Verify we received sufficient data (more than chunk size)
+            # Verify sufficient data returned
             if len(lc_r_poi) > len(df):
-                # Assign land cover values to each measurement
+                # Assign land cover values to measurements
                 for i in range(len(df)):
                     if i + 1 < len(lc_r_poi):
                         df.at[df.index[i], 'lc'] = lc_r_poi[i+1][4]
                 
                 toc(t0, "chunk_processing")
-                LOG.debug(f"Successfully processed chunk of {len(df)} measurements, got {len(lc_r_poi)} EE responses")
+                LOG.debug(f"Successfully processed chunk of {len(df)} measurements, "
+                         f"got {len(lc_r_poi)} EE responses")
                 return df
             else:
-                # Handle insufficient data by keeping default values
-                LOG.debug(f"Skipping chunk with insufficient EE responses: got {len(lc_r_poi)}, expected > {len(df)}")
+                # Insufficient data returned, keep default values
+                LOG.debug(f"Insufficient EE responses: got {len(lc_r_poi)}, "
+                         f"expected > {len(df)}")
                 toc(t0, "chunk_processing")
                 return df
                     
         except Exception as e:
-            LOG.warning(f"EE error (attempt {attempt+1}/{MAX_RETRIES}): {e}")
+            LOG.warning(f"EE query failed (attempt {attempt+1}/{MAX_RETRIES}): {e}")
             if attempt < MAX_RETRIES - 1:
                 time.sleep(RETRY_DELAY * (attempt + 1))
             else:
                 LOG.error(f"Failed to process chunk after {MAX_RETRIES} attempts")
                 break
     
-    # Return chunk with default land cover values if all retries failed
+    # Return chunk with default values if all retries failed
     toc(t0, "chunk_processing")
     return df
 
 def main(src: Path, dst: Path):
     """
-    Main processing function that orchestrates the land cover classification workflow.
+    This is our main orchestrator - the conductor of our land cover symphony!
     
-    This function handles chunked processing, resume capability, and output management.
-    It implements robust error handling and progress tracking for long-running processes.
+    It takes our big file of methane measurements and works through it chunk by chunk,
+    adding land cover information to each measurement. It's smart enough to pick up 
+    where it left off if something goes wrong (like if your computer crashes), and 
+    it keeps track of progress so you know how it's doing.
     
-    Args:
-        src: Path to input methane measurements file
-        dst: Path to output file with land cover annotations
+    What we need:
+        src: The file with all our methane measurements (the input)
+        dst: Where we want to save the results with land cover added (the output)
     """
-    LOG.info("Starting land cover classification with enhanced reliability")
+    LOG.info("Let's add some land cover magic to our methane data!")
     
-    # Define column names for the input data
+    # These are the columns we expect in our input file
     headernames = ['index', 'times', 'lon', 'lat', 'xch4', 'xch4u', 'xco', 'xcou']
     
-    # Initialize performance tracking
-    tot0 = tic()
+    # Starting our performance timer and counters
+    tot0 = tic()  # When did we start?
     tstat["TOTAL_RUN"].append(0)
-    processed_chunks = 0
-    total_measurements = 0
+    processed_chunks = 0      # How many chunks have we finished?
+    total_measurements = 0    # How many measurements have we processed?
     
-    # Implement resume capability for long-running processes
+    # Smart resume feature - if we've already started this job, pick up where we left off
     skip_chunks = 0
-    if dst.exists():
+    if dst.exists():  # Do we already have some results?
         try:
             existing_df = pd.read_csv(dst)
             existing_rows = len(existing_df)
@@ -320,59 +328,63 @@ def main(src: Path, dst: Path):
             remaining_rows = existing_rows % CHUNK_SIZE
             
             if remaining_rows > 0:
-                # Remove partial chunk to ensure clean restart
+                # Let's clean up any partial chunk to avoid confusion
                 clean_rows = skip_chunks * CHUNK_SIZE
                 existing_df.iloc[:clean_rows].to_csv(dst, index=False)
-                LOG.info(f"Resuming: keeping {clean_rows} rows, will reprocess {remaining_rows} partial rows")
+                LOG.info(f"Found some partial work - keeping {clean_rows} good rows, "
+                        f"will redo {remaining_rows} partial ones")
             else:
-                LOG.info(f"Resuming: {existing_rows} rows already processed, skipping {skip_chunks} chunks")
+                LOG.info(f"Great! We already have {existing_rows} rows done, "
+                        f"so we'll skip ahead {skip_chunks} chunks")
         except Exception as e:
-            LOG.warning(f"Could not read existing file, starting fresh: {e}")
+            LOG.warning(f"Couldn't read the existing file, so we'll start fresh: {e}")
             skip_chunks = 0
-            dst.unlink(missing_ok=True)
+            dst.unlink(missing_ok=True)  # Clean slate!
     
-    # Process data in chunks to manage memory usage
+    # Let's read and process our data in bite-sized chunks (easier on memory!)
     chunk_iterator = pd.read_csv(src, chunksize=CHUNK_SIZE, header=None, names=headernames)
     
     for chunk_idx, df in enumerate(tqdm(chunk_iterator, desc="Processing chunks")):
         if df.empty:
             continue
             
-        # Skip already processed chunks when resuming
+        # If we're resuming, we can skip chunks we already finished
         if chunk_idx < skip_chunks:
-            continue
+            continue  # "Been there, done that!"
             
-        # Process the current chunk
+        # Time to work on this chunk - add land cover info to all measurements!
         processed_df = process_chunk_karoff(df)
         
-        # Save results to output file
+        # Save our progress! First chunk creates the file, others append to it
         if processed_chunks == 0 and skip_chunks == 0:
-            processed_df.to_csv(dst, mode='w', header=True, index=False)
+            processed_df.to_csv(dst, mode='w', header=True, index=False)   # New file with headers
         else:
-            processed_df.to_csv(dst, mode='a', header=False, index=False)
+            processed_df.to_csv(dst, mode='a', header=False, index=False)  # Add to existing file
         
         processed_chunks += 1
         total_measurements += len(processed_df)
         
-        # Provide progress updates every 10 chunks
+        # Let's celebrate our progress every 10 chunks!
         if processed_chunks % 10 == 0:
-            LOG.info(f"Processed {processed_chunks} chunks, {total_measurements:,} measurements")
+            LOG.info(f"Making good progress: {processed_chunks} chunks done, "
+                    f"{total_measurements:,} measurements processed!")
     
-    # Finalize timing statistics
+    # Time to see how fast we were!
     tstat["TOTAL_RUN"][0] = time.perf_counter() - tot0
     
-    # Log completion summary
-    LOG.info("Land cover classification completed")
-    LOG.info(f"  Total chunks: {processed_chunks}")
-    LOG.info(f"  Total measurements: {total_measurements:,}")
-    LOG.info(f"  Output file: {dst}")
+    # Victory lap time! Let's see what we accomplished
+    LOG.info("Land cover classification is complete!")
+    LOG.info(f"  We processed {processed_chunks} chunks")
+    LOG.info(f"  That's {total_measurements:,} measurements with land cover data!")
+    LOG.info(f"  Results saved to: {dst}")
 
-# Set up command line interface for flexible execution
-ap = argparse.ArgumentParser(description="Add land cover classification to methane data")
+# Setting up our command line interface - making it easy to run from anywhere!
+ap = argparse.ArgumentParser(
+    description="Add land cover classification to methane data")
 ap.add_argument("--src", type=Path, default="methane_all01.txt", 
-                help="Input methane measurements file")
+                help="Where to find our methane measurements")  # The input file
 ap.add_argument("--dst", type=Path, default="methane_all02.txt",
-                help="Output file with land cover annotations")
+                help="Where to save results with land cover added")  # The output file
 ap.add_argument("--verbose", "-v", action="store_true",
                 help="Enable verbose logging")
 args = ap.parse_args()
@@ -390,12 +402,12 @@ if __name__ == "__main__":
 
 The third step generates histograms of methane and carbon monoxide measurements grouped by continent and season. This algorithm uses a streaming approach to handle large datasets efficiently.
 
-\begin{lstlisting}[language=Python, caption=Histogram Generation Algorithm, label=alg:step03_histos]
+\begin{lstlisting}[language=Python, caption=Histogram Generation Algorithm, label=alg:step03_histos, breaklines=true]
 #!/usr/bin/env python3
 """
-Histogram generation for XCH4 and XCO by continent and season
-Creates statistical distributions of methane and carbon monoxide measurements
-grouped by geographical and temporal classifications.
+Histogram generation for methane and CO measurements by continent and season.
+Creates statistical distributions grouped by geographical and temporal classifications
+using streaming processing for memory efficiency.
 """
 
 from __future__ import annotations
@@ -418,7 +430,7 @@ plt.rcParams.update(
     {"figure.figsize": (6, 4), "axes.grid": True, "font.size": 9}
 )
 
-# Define geographical and temporal classification parameters
+# Geographic and temporal classification parameters
 _CONTINENTS = [
     "Africa",
     "Asia",
@@ -434,7 +446,7 @@ _SEASON_LABELS = ["Winter", "Spring", "Summer", "Fall"]
 # Season boundaries in Modified Julian Day (solstice/equinox dates)
 _SEASON_MJD = [58108, 58197, 58290, 58384, 58473]
 
-# Define variables and binning specifications for histogram generation
+# Variable specifications for histogram binning
 _VARS = ["xch4", "xco"]
 _BIN_SPEC = {
     "xch4": dict(range=(1500, 2500), bins=200),  # Methane concentration range
@@ -443,13 +455,16 @@ _BIN_SPEC = {
 
 def _season_of_mjd(mjd: float) -> int:
     """
-    Determine the season for a given Modified Julian Day.
+    Determine season for given Modified Julian Day.
+    
+    Maps MJD values to seasonal indices using predefined boundaries
+    based on solstice and equinox dates.
     
     Args:
         mjd: Modified Julian Day value
         
     Returns:
-        Integer 0-3 for Winter-Fall (North-hemisphere definition)
+        Integer 0-3 for Winter-Fall (Northern Hemisphere)
     """
     for i in range(4):
         if _SEASON_MJD[i] <= mjd < _SEASON_MJD[i + 1]:
@@ -458,35 +473,40 @@ def _season_of_mjd(mjd: float) -> int:
 
 def _simplify_shp(shp: Path, percent: float = 0.01) -> gpd.GeoSeries:
     """
-    Read shapefile and simplify polygons to improve processing speed.
+    Load our continent shapes and make them simpler for faster processing.
     
-    Reduces vertex count to approximately 1% of original for large datasets
-    while maintaining spatial accuracy for continental boundaries.
+    Think of it like going from a super detailed map to a simplified one - we remove
+    unnecessary detail while keeping the overall shape accurate. This makes our
+    computer much happier when processing millions of points!
     
-    Args:
-        shp: Path to continent shapefile
-        percent: Simplification percentage (default 1%)
+    What we need:
+        shp: Where to find our continent boundary file
+        percent: How much to simplify (1% = remove 99% of the detail points)
         
-    Returns:
-        Simplified GeoSeries of continent geometries
+    What we give back:
+        Simplified continent shapes that are much faster to work with
     """
-    poly = gpd.read_file(shp).to_crs("EPSG:4326")
-    # Calculate tolerance based on bounding box diagonal
-    minx, miny, maxx, maxy = poly.total_bounds
-    diag = math.hypot(maxx - minx, maxy - miny)
-    tol = diag * percent
-    return poly.geometry.simplify(tol, preserve_topology=True)
+    poly = gpd.read_file(shp).to_crs("EPSG:4326")  # Load and standardize coordinate system
+    # Figure out how much detail we can safely remove
+    minx, miny, maxx, maxy = poly.total_bounds  # Get the overall boundary
+    diag = math.hypot(maxx - minx, maxy - miny)  # Calculate diagonal distance
+    tol = diag * percent  # Our simplification threshold
+    return poly.geometry.simplify(tol, preserve_topology=True)  # Simplify while keeping shape integrity
 
 def _make_empty_hist() -> Dict[Tuple[int, int], np.ndarray]:
     """
-    Create empty histogram structure for all continent-season combinations.
+    Set up empty storage bins for all our histograms.
     
-    Returns:
-        Nested dictionary with zero-initialized arrays for each combination
+    Like preparing a filing cabinet with folders for every continent-season combo.
+    Each folder will eventually hold counts of methane and CO measurements.
+    
+    What we give back:
+        A big nested dictionary with zeros everywhere, ready to be filled with data
     """
-    h = {}
-    for ci in range(len(_CONTINENTS)):
-        for si in range(4):
+    h = {}  # Our empty filing cabinet
+    for ci in range(len(_CONTINENTS)):  # For each continent
+        for si in range(4):  # For each season
+            # Create empty bins for both methane and CO measurements
             h[(ci, si)] = {v: np.zeros(_BIN_SPEC[v]["bins"], int) for v in _VARS}
     return h
 
@@ -496,83 +516,92 @@ def _process_chunk(
     binspec: dict,
 ) -> Dict[Tuple[int, int], Dict[str, np.ndarray]]:
     """
-    Process one chunk of data and return binned counts for histogram generation.
+    This is where the magic happens! Process a chunk of measurements and sort them
+    into the right bins.
     
-    This function performs spatial and temporal classification for each measurement
-    and bins the values according to the specified ranges.
+    For each measurement, we figure out: 1) Which continent is it over? 2) What season
+    was it taken in? 3) What bin does the methane/CO value belong in? Then we add it
+    to our growing histogram counts.
     
-    Args:
-        df: DataFrame containing measurement data
-        geoms: GeoSeries of continent geometries
-        binspec: Dictionary defining binning specifications
+    What we need:
+        df: A chunk of measurement data with coordinates and values
+        geoms: The continent boundary shapes
+        binspec: The rules for how to organize our bins
         
-    Returns:
-        Dictionary of binned counts for each continent-season-variable combination
+    What we give back:
+        Updated counts for each continent-season-variable combo
     """
-    # Create GeoDataFrame for spatial operations
-    gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
-    out = _make_empty_hist()
+    # Turn our coordinates into geographic points for spatial analysis
+    gdf = gpd.GeoDataFrame(df, 
+                          geometry=gpd.points_from_xy(df.lon, df.lat), 
+                          crs="EPSG:4326")
+    out = _make_empty_hist()  # Start with empty bins
     
-    # Create masks for efficient spatial filtering
-    world_mask = np.ones(len(df), bool)  # All points belong to "World"
-    mask_cache = {}
-    for ci in range(len(_CONTINENTS) - 1):  # Skip "World" as it's handled separately
-        mask_cache[ci] = gdf.within(geoms.iloc[ci]).values
+    # Pre-calculate which points belong to which continents (for speed!)
+    world_mask = np.ones(len(df), bool)  # Everything belongs to "World" category
+    mask_cache = {}  # Our lookup table
+    for ci in range(len(_CONTINENTS) - 1):  # Check all continents except "World"
+        mask_cache[ci] = gdf.within(geoms.iloc[ci]).values  # Is this point inside this continent?
 
-    # Process each measurement point
+    # Now let's go through each measurement and sort it properly
     for idx, row in df.iterrows():
-        mjd = int(row.times)
-        si = _season_of_mjd(mjd)  # Determine season
+        mjd = int(row.times)  # Get the date
+        si = _season_of_mjd(mjd)  # What season was this taken in?
         
-        # Check each continent for spatial classification
+        # Figure out which continent this measurement belongs to
         for ci in range(len(_CONTINENTS)):
+            # Special case: "World" includes everything, others use our pre-calculated masks
             mask = world_mask if ci == len(_CONTINENTS) - 1 else mask_cache[ci]
-            if not mask[idx]:
-                continue
+            if not mask[idx]:  # This point doesn't belong to this continent
+                continue  # Skip to the next continent
                 
-            # Bin the measurement values for each variable
-            for v in _VARS:
-                spec = binspec[v]
-                bin_edges = np.linspace(*spec["range"], spec["bins"] + 1)
-                val = row[v]
+            # Time to bin this measurement! (Sort it into the right histogram bucket)
+            for v in _VARS:  # For both methane and CO
+                spec = binspec[v]  # Get the binning rules for this variable
+                bin_edges = np.linspace(*spec["range"], spec["bins"] + 1)  # Create the bin boundaries
+                val = row[v]  # The actual measurement value
                 
-                # Only bin values within the specified range
+                # Only count values that are in our expected range
                 if spec["range"][0] <= val < spec["range"][1]:
-                    bi = np.searchsorted(bin_edges, val, side="right") - 1
-                    out[(ci, si)][v][bi] += 1
+                    bi = np.searchsorted(bin_edges, val, side="right") - 1  # Find which bin this belongs in
+                    out[(ci, si)][v][bi] += 1  # Add one to that bin's count!
     return out
 
 def _merge_hist(a: Dict, b: Dict):
     """
-    Merge two histogram dictionaries by adding corresponding bin counts.
+    Combine two sets of histogram counts - like merging two photo albums!
     
-    Used for combining results from parallel processing.
+    When we process data in parallel (multiple workers at once), each worker
+    creates their own histogram counts. This function adds them all together
+    to get the final totals.
     
-    Args:
-        a: First histogram dictionary (modified in place)
-        b: Second histogram dictionary to merge
+    What we need:
+        a: First set of histogram counts (this one gets updated)
+        b: Second set of histogram counts to add in
     """
-    for k in a:
-        for v in _VARS:
-            a[k][v] += b[k][v]
+    # Go through each continent-season combination and add the counts together
+    for k in a:  # For each (continent, season) pair
+        for v in _VARS:  # For both methane and CO
+            a[k][v] += b[k][v]  # Add the bin counts together
 
 def _plot_hist(
     hist: Dict[Tuple[int, int], Dict[str, np.ndarray]],
     outdir: Path,
 ):
     """
-    Generate and save histogram plots for all continent-season-variable combinations.
+    Time to turn our numbers into beautiful plots!
     
-    Creates publication-quality figures with proper labeling and formatting.
-    Only generates plots for combinations with non-zero data.
+    This creates actual histogram charts for every continent-season-variable combination
+    that has data. We only make plots where we actually have measurements (no point in
+    showing empty charts). Each plot gets saved as a file with a descriptive name.
     
-    Args:
-        hist: Dictionary containing histogram data
-        outdir: Directory to save generated figures
+    What we need:
+        hist: All our carefully counted histogram data
+        outdir: Where to save all the pretty plots
     """
-    outdir.mkdir(parents=True, exist_ok=True)
+    outdir.mkdir(parents=True, exist_ok=True)  # Make sure our output folder exists
     
-    # Generate plots for each combination
+    # Let's make plots for every continent!
     for ci, cont in enumerate(_CONTINENTS):
         for si, sname in enumerate(_SEASON_LABELS):
             for v in _VARS:
@@ -588,7 +617,9 @@ def _plot_hist(
                 centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
                 
                 plt.figure()
-                plt.bar(centers, counts, width=centers[1] - centers[0], edgecolor="none")
+                plt.bar(centers, counts, 
+                        width=centers[1] - centers[0], 
+                        edgecolor="none")
                 plt.title(f"{v.upper()} - {cont} - {sname}")
                 plt.xlabel(v.upper())
                 plt.ylabel("counts")
@@ -601,47 +632,54 @@ def _plot_hist(
 
 def main():
     """
-    Main function that orchestrates the histogram generation workflow.
+    The grand conductor of our histogram symphony!
     
-    Handles data loading, parallel processing, and figure generation.
-    Implements streaming processing for memory-efficient operation.
+    This orchestrates the whole process: loads continent shapes, reads our methane data
+    in chunks (so we don't run out of memory), processes everything either in parallel
+    or sequentially, and finally creates all the beautiful histogram plots.
     """
-    # Set up command line interface
+    # Setting up our command line options - making it user-friendly!
     pa = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    pa.add_argument("--csv", required=True, type=Path, help="processed methane_all02.txt")
-    pa.add_argument("--shp", required=True, type=Path, help="continent shapefile")
-    pa.add_argument("--fig", type=Path, default=Path("fig"), help="output figure folder")
-    pa.add_argument("--chunksize", type=int, default=200_000, help="rows per read chunk")
-    pa.add_argument("--workers", type=int, default=1, help="parallel histogram workers")
+    pa.add_argument("--csv", required=True, type=Path, 
+                   help="processed methane_all02.txt")
+    pa.add_argument("--shp", required=True, type=Path, 
+                   help="continent shapefile")
+    pa.add_argument("--fig", type=Path, default=Path("fig"), 
+                   help="output figure folder")
+    pa.add_argument("--chunksize", type=int, default=200_000, 
+                   help="rows per read chunk")
+    pa.add_argument("--workers", type=int, default=1, 
+                   help="parallel histogram workers")
     args = pa.parse_args()
 
-    # Load and simplify continent polygons for efficient spatial operations
+    # First, let's get our continent shapes ready for fast processing
     print("Loading and simplifying continent polygons...")
-    geoms = _simplify_shp(args.shp)
+    geoms = _simplify_shp(args.shp)  # Load and simplify for speed
 
-    # Initialize histogram structure and process data in streaming fashion
-    print("Streaming histogramming...")
-    hist = _make_empty_hist()
-    rdr = pd.read_csv(args.csv, chunksize=args.chunksize, usecols=["times", "lon", "lat", "xch4", "xco"])
+    # Now for the main event - processing our data in manageable chunks
+    print("Creating histograms from streaming data...")
+    hist = _make_empty_hist()  # Start with empty bins
+    rdr = pd.read_csv(args.csv, chunksize=args.chunksize, 
+                     usecols=["times", "lon", "lat", "xch4", "xco"])
     
-    # Choose between parallel and sequential processing
+    # Choose our processing strategy based on how many workers we have
     if args.workers > 1:
-        # Parallel processing for large datasets
+        # Multiple workers = parallel processing (faster for big datasets!)
         results = Parallel(n_jobs=args.workers, backend="loky")(
             delayed(_process_chunk)(df, geoms, _BIN_SPEC) for df in tqdm(rdr)
         )
         for h in results:
-            _merge_hist(hist, h)
+            _merge_hist(hist, h)  # Combine all the results
     else:
-        # Sequential processing for smaller datasets or debugging
+        # One worker = process chunk by chunk (easier to debug)
         for df in tqdm(rdr):
             h = _process_chunk(df, geoms, _BIN_SPEC)
-            _merge_hist(hist, h)
+            _merge_hist(hist, h)  # Add this chunk's results to our totals
 
-    # Generate and save all histogram figures
-    print("Writing figures...")
+    # Time to create all our beautiful plots!
+    print("Creating and saving histogram figures...")
     _plot_hist(hist, args.fig)
-    print(f"Done. Figures in {args.fig}")
+    print(f"All done! Check out your figures in {args.fig}")
 
 if __name__ == "__main__":
     main()
@@ -652,11 +690,11 @@ if __name__ == "__main__":
 
 The fourth step creates a color-coded matrix heatmap visualization of the methane measurements. This algorithm processes the matrix data and generates publication-quality figures.
 
-\begin{lstlisting}[language=Python, caption=Heatmap Generation Algorithm, label=alg:step04_heatmap]
+\begin{lstlisting}[language=Python, caption=Heatmap Generation Algorithm, label=alg:step04_heatmap, breaklines=true]
 #!/usr/bin/env python
 """
-Heatmap generation for methane concentration matrix
-Creates color-coded matrix visualization showing spatial and temporal
+Heatmap generation for methane concentration matrices.
+Creates color-coded visualizations showing spatial and temporal
 patterns in methane concentration data.
 """
 
@@ -664,39 +702,37 @@ import seaborn as sb, matplotlib.pyplot as plt, pandas as pd, argparse, pathlib
 
 def main(csv_path="matrix.csv", out_png="fig/matrix.png", cmap="rocket_r"):
     """
-    Generate a heatmap visualization from matrix data.
+    Generate heatmap visualization from matrix data.
     
-    This function creates a publication-quality heatmap showing methane
-    concentration patterns across different spatial and temporal dimensions.
-    The heatmap uses a color-coded matrix where each cell represents
-    the methane concentration for a specific combination of parameters.
+    Creates publication-quality heatmap with color-coded representation
+    of methane concentrations across spatial and temporal dimensions.
     
     Args:
         csv_path: Path to input matrix CSV file
         out_png: Path for output PNG figure
-        cmap: Colormap for visualization (default: rocket_r)
+        cmap: Colormap for visualization
     """
-    # Load the matrix data from CSV file
+    # Load matrix data
     df = pd.read_csv(csv_path, index_col=0)
     df.index = df.index.astype(str)
     
-    # Create output directory if it doesn't exist
+    # Create output directory
     pathlib.Path("fig").mkdir(exist_ok=True)
     
-    # Create the heatmap figure with appropriate size for publication
+    # Create figure with appropriate size
     plt.figure(figsize=(18,18))
     
-    # Generate the heatmap using seaborn with custom formatting
+    # Generate heatmap with annotations and color bar
     sb.heatmap(df, annot=True, fmt=".0f",
                cbar_kws={"orientation": "horizontal","shrink":0.8,
                          "label":"XCH$_4$ [ppb]"},
                cmap=cmap)
     
-    # Save the figure with high resolution for publication
+    # Save figure with high resolution
     plt.savefig(out_png, dpi=300)
 
 if __name__ == "__main__":
-    # Set up command line argument parsing for flexible execution
+    # Command line interface
     p = argparse.ArgumentParser(description="Generate methane concentration heatmap")
     p.add_argument("--csv",  default="matrix.csv")
     p.add_argument("--out",  default="fig/matrix.png")
@@ -709,7 +745,7 @@ if __name__ == "__main__":
 
 The fifth step provides comprehensive dataset validation and health checking capabilities. This algorithm performs both file-level and row-level audits to ensure data quality and completeness.
 
-\begin{lstlisting}[language=Python, caption=Dataset Health Check Algorithm, label=alg:step05_health_check]
+\begin{lstlisting}[language=Python, caption=Dataset Health Check Algorithm, label=alg:step05_health_check, breaklines=true]
 #!/usr/bin/env python3
 """
 WFMD dataset health-check
@@ -899,7 +935,9 @@ def audit_rows(csv:Path, shp:Path):
         print("\n(column 'lc' missing - run step02 first)")
 
     # Perform spatial analysis using continent shapefiles
-    gdf  = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon,df.lat), crs="EPSG:4326")
+    gdf = gpd.GeoDataFrame(df, 
+                          geometry=gpd.points_from_xy(df.lon, df.lat), 
+                          crs="EPSG:4326")
     poly = gpd.read_file(shp).to_crs("EPSG:4326")
 
     # Count measurements by continent and season
@@ -914,7 +952,8 @@ def audit_rows(csv:Path, shp:Path):
     # Verify data value ranges for quality control
     print("\nXCH4 / XCO ranges:")
     for v in ("xch4","xco"):
-        if v in df: print(f"{v.upper():5s}: {df[v].min():8.1f} ... {df[v].max():8.1f}")
+        if v in df: 
+            print(f"{v.upper():5s}: {df[v].min():8.1f} ... {df[v].max():8.1f}")
 
     # Check for missing data in each column
     print("\nMissing per column:")
@@ -956,15 +995,15 @@ if __name__ == "__main__":
 The complete workflow consists of five main steps that process methane detection data from raw NetCDF files to final analysis and visualization:
 
 \begin{enumerate}
-    \item \textbf{Data Extraction} (Step 1): Parallel extraction of methane and carbon monoxide measurements from WFMD NetCDF files with proper time conversion and global indexing.
-    
-    \item \textbf{Land Cover Classification} (Step 2): Addition of MODIS land cover data using Google Earth Engine, processing data in chunks with enhanced error handling and reliability.
-    
-    \item \textbf{Histogram Generation} (Step 3): Creation of continent and season-specific histograms for methane and carbon monoxide measurements using streaming processing for large datasets.
-    
-    \item \textbf{Heatmap Visualization} (Step 4): Generation of color-coded matrix heatmaps for publication-quality methane concentration visualizations.
-    
-    \item \textbf{Data Validation} (Step 5): Comprehensive dataset health checking including file-level audits, row-level validation, and quality assessment.
+	\item \textbf{Data Extraction} (Step 1): Parallel extraction of methane and carbon monoxide measurements from WFMD NetCDF files with proper time conversion and global indexing.
+
+	\item \textbf{Land Cover Classification} (Step 2): Addition of MODIS land cover data using Google Earth Engine, processing data in chunks with enhanced error handling and reliability.
+
+	\item \textbf{Histogram Generation} (Step 3): Creation of continent and season-specific histograms for methane and carbon monoxide measurements using streaming processing for large datasets.
+
+	\item \textbf{Heatmap Visualization} (Step 4): Generation of color-coded matrix heatmaps for publication-quality methane concentration visualizations.
+
+	\item \textbf{Data Validation} (Step 5): Comprehensive dataset health checking including file-level audits, row-level validation, and quality assessment.
 \end{enumerate}
 
 Each algorithm is designed to handle large-scale datasets efficiently through parallel processing, streaming data handling, and memory-conscious operations. The workflow maintains data integrity while providing robust error handling and comprehensive logging for scientific reproducibility. All scripts and additional implementation details are available in the public repository: \url{https://github.com/marcoruizrueda-ist/PHD}.

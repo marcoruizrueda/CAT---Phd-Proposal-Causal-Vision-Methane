@@ -7,100 +7,108 @@
 %%%%%
 \section{Research Plan and Timeline}
 
-This section outlines the structured timeline for the doctoral research, delineating key technical milestones and deliverables from the current year onward. The progression is designed to support the main objective of advancing methane monitoring through causal machine learning applied to satellite time series, with an initial focus on reproducing and extending the methodology developed by Karoff and Vara-Vela \cite{Karoff2023}. The research plan integrates the development of high-performance computing workflows for data preprocessing, systematic implementation of causality testing methods, and the generation of policy-relevant outputs. Each year is articulated in terms of its scientific focus, associated computational or methodological implementations, and expected outputs that contribute incrementally to the overall thesis.
-
+This section outlines the structured timeline for the doctoral research, designed to systematically address the six specific objectives outlined in Section~\ref{sec:research-objectives}. The progression advances from framework development (Objectives 1 \& 4) through ecosystem-specific analysis (Objective 2), comparative methodology evaluation (Objective 3), validation protocol establishment (Objective 5), to open-source software dissemination (Objective 6). Each year's activities are strategically aligned with these objectives, building upon the foundational work analyzed in Section~\ref{sec:baseline} and implementing the comprehensive methodology detailed in Chapter~\ref{chap:methodology}.
 
 \renewcommand{\arraystretch}{1.3}
-\begin{longtable}{@{} >{\centering\arraybackslash}p{3cm} >{\centering\arraybackslash}p{8cm} >{\centering\arraybackslash}p{3cm} @{}}
-\caption{Planned milestones, activities, and deliverables across the PhD timeline.}
-\label{tab:phd_milestones} \\
-\toprule
-\textbf{Year} & \textbf{Milestones and Activities} & \textbf{Deliverables} \\
-\midrule
-\endfirsthead
+\begin{longtable}{@{} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{7.5cm} >{\centering\arraybackslash}p{4.5cm} @{}}
+	\caption[Planned milestones, activities, and deliverables]{Planned milestones, activities, and deliverables across the PhD timeline.}
+	\label{tab:phd_milestones}                                                                        \\
+	\toprule
+	\textbf{Year}                        & \textbf{Milestones and Activities} & \textbf{Deliverables} \\
+	\midrule
+	\endfirsthead
 
-\toprule
-\textbf{Year} & \textbf{Milestones and Activities} & \textbf{Deliverables} \\
-\midrule
-\endhead
+	\toprule
+	\textbf{Year}                        & \textbf{Milestones and Activities} & \textbf{Deliverables} \\
+	\midrule
+	\endhead
 
-\midrule
-\multicolumn{3}{r}{\small\textit{Table~\ref{tab:phd_milestones} continued on next page}} \\
-\midrule
-\endfoot
+	\midrule
+	\multicolumn{3}{r}{\small\textit{Table~\ref{tab:phd_milestones} continued on next page}}          \\
+	\midrule
+	\endfoot
 
-\bottomrule
-\endlastfoot
+	\bottomrule
+	\endlastfoot
 
-\textbf{Year 2 (current)} & 
-\begin{minipage}[t]{8cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item Continue the curricular courses.
-    \item Deploy and adapt methane data extraction scripts for large-scale NetCDF processing using Deucalion HPC.
-    \item Integrate MODIS-derived land cover data with TROPOMI-based methane estimates.
-    \item Implement and validate statistical pipelines for XCH$_4$ seasonal aggregation and land cover-specific visualizations.
-    \item Submit the CAT (Candidature and Thesis) document to the Examination Committee.
-\end{itemize}
-\end{minipage} &
-\begin{minipage}[t]{3cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item Operational preprocessing pipeline for WFMD and MODIS data.
-    \item Preliminary heatmaps and histograms for seasonal/land cover variation in XCH$_4$.
-    \item CAT document.
-\end{itemize}
-\end{minipage} \\
+	\textbf{Year 2 (current)}            &
+	\begin{minipage}[t]{8cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item Continue the curricular courses.
+			\item \textbf{Obj. 1:} Deploy temporal causal discovery framework infrastructure on Deucalion HPC for large-scale satellite data processing.
+			\item \textbf{Obj. 1:} Integrate multi-sensor datasets (TROPOMI, MODIS, co-constituents) as detailed in Section~\ref{sec:datasets}.
+			\item \textbf{Obj. 2:} Implement land cover-specific data stratification and preliminary ecosystem analysis.
+			\item \textbf{Obj. 4:} Begin studying machine learning approaches for causal discovery enhancement.
+			\item Submit the CAT (Candidature and Thesis) document to the Examination Committee.
+		\end{itemize}
+	\end{minipage} &
+	\begin{minipage}[t]{3cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item Operational preprocessing pipeline for satellite datasets.
+			\item Preliminary heatmaps and histograms for seasonal/land cover variation in XCH$_4$.
+			\item Ecosystem-stratified methane analysis framework.
+			\item CAT document.
+		\end{itemize}
+	\end{minipage}                                                               \\
 
-\addlinespace[0.8em]
-\textbf{Year 3} & 
-\begin{minipage}[t]{8cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item Complete the curricular courses.
-    \item Fully reproduce the Karoff and Vara-Vela study, extending to additional land cover classes.
-    \item Improve causal discovery techniques: Granger causality, Transfer Entropy, and PCMCI.
-    \item Compare causality metrics for spatial-temporal robustness.
-    \item Apply multiple-comparison corrections across grid cells and covariates.
-    \item Prepare figures and manuscript structure for first peer-reviewed article.
-\end{itemize}
-\end{minipage} &
-\begin{minipage}[t]{3cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item Validated causal analysis pipeline (Python/Notebook-based).
-    \item Submission of a conference abstract and presentation.
-\end{itemize}
-\end{minipage} \\
+	\addlinespace[0.8em]
+	\textbf{Year 3}                      &
+	\begin{minipage}[t]{8cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item Complete the curricular courses.
+			\item \textbf{Obj. 1:} Complete implementation of unified causal discovery framework (Granger causality, Transfer Entropy, PCMCI+).
+			\item \textbf{Obj. 2:} Characterize ecosystem-specific causal patterns across all major land cover types.
+			\item \textbf{Obj. 3:} Implement comparative evaluation protocol (Section~\ref{sec:comparative_evaluation}) to systematically assess correlation-based vs. causal discovery approaches.
+			\item \textbf{Obj. 5:} Develop and apply validation protocols for environmental causal inference.
+			\item Reproduce and extend baseline study (Section~\ref{sec:baseline}) with causal analysis.
+			\item Prepare first peer-reviewed manuscript.
+		\end{itemize}
+	\end{minipage} &
+	\begin{minipage}[t]{3cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item Validated causal discovery pipeline with ecosystem stratification.
+			\item Comparative analysis results (causal vs. correlational).
+			\item Conference presentation on framework validation.
+		\end{itemize}
+	\end{minipage}                                                               \\
 
-\addlinespace[0.8em]
-\textbf{Year 4} & 
-\begin{minipage}[t]{8cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item Expand time series analysis to longer intervals and additional regions of interest.
-    \item Integrate causal results with auxiliary covariates (e.g., land surface temperature, precipitation anomalies).
-    \item Draft and submit primary thesis chapters.
-    \item Conduct policy impact assessment of identified methane sources.
-\end{itemize}
-\end{minipage} &
-\begin{minipage}[t]{3cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item First journal manuscript.
-    \item Policy brief based on geospatial causal findings.
-\end{itemize}
-\end{minipage} \\
+	\addlinespace[0.8em]
+	\textbf{Year 4}                      &
+	\begin{minipage}[t]{8cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item \textbf{Obj. 2:} Complete ecosystem-specific causal analysis across extended time series and regions.
+			\item \textbf{Obj. 4:} Finalize machine learning and causal inference integration studies.
+			\item \textbf{Obj. 5:} Validate causal discovery results against independent data sources and expert knowledge.
+			\item \textbf{Obj. 6:} Begin open research code development following architecture detailed in Section~\ref{sec:software_ecosystem}.
+			\item Draft and submit primary thesis chapters and journal manuscript.
+			\item Conduct policy impact assessment of identified causal relationships.
+		\end{itemize}
+	\end{minipage} &
+	\begin{minipage}[t]{3cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item First journal manuscript on causal methane monitoring.
+			\item Policy brief on ecosystem-specific mitigation strategies.
+			\item Complete research codebase with documentation and tutorials.
+		\end{itemize}
+	\end{minipage}                                                               \\
 
-\addlinespace[0.8em]
-\textbf{Year 5} & 
-\begin{minipage}[t]{8cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item Finalize thesis structure and content.
-    \item Prepare for thesis defense (presentation and revisions).
-    \item Release all preprocessing and causal analysis code as open source.
-\end{itemize}
-\end{minipage} &
-\begin{minipage}[t]{3cm}\centering
-\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
-    \item Final PhD thesis.
-    \item Public GitHub repository with licensed datasets and scripts.
-\end{itemize}
-\end{minipage} \\
+	\addlinespace[0.8em]
+	\textbf{Year 5}                      &
+	\begin{minipage}[t]{8cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item \textbf{Obj. 6:} Complete and publish comprehensive open research code library as detailed in Section~\ref{sec:software_ecosystem}, with academic publication.
+			\item Finalize thesis integrating all six objectives with comprehensive validation results.
+			\item Prepare thesis defense demonstrating achievement of all research objectives.
+			\item Disseminate results through additional publications and policy engagement.
+		\end{itemize}
+	\end{minipage} &
+	\begin{minipage}[t]{3cm}\raggedright
+		\begin{itemize}[left=0pt, labelsep=4pt, itemsep=2pt]
+			\item Final PhD thesis demonstrating objective completion.
+			\item Public GitHub repository with open research code and comprehensive documentation.
+			\item Additional publications on methodology and applications.
+		\end{itemize}
+	\end{minipage}                                                               \\
 
 \end{longtable}
 
@@ -112,63 +120,62 @@ This section outlines the structured timeline for the doctoral research, delinea
 The interdisciplinary and data-intensive nature of this research introduces several technical, computational, and interpretative risks. These are anticipated and addressed through multiple mitigation strategies, as summarized below:
 
 \begin{itemize}
-    \item \textbf{Satellite Data Gaps and Retrieval Artifacts:} Methane retrievals from TROPOMI (via the WFMD product) can suffer from cloud contamination, surface albedo biases, or temporal discontinuities. This is mitigated by:
-    \begin{itemize}
-        \item Employing multi-year temporal coverage (2018–2020) to smooth anomalies.
-        \item Applying strict quality assurance filters embedded in the WFMD files.
-        \item Aggregating data seasonally and over defined geographic tiles to increase signal stability.
-    \end{itemize}
+	\item \textbf{Satellite Data Gaps and Retrieval Artifacts:} Methane retrievals can suffer from cloud contamination, surface albedo biases, or temporal discontinuities. This is mitigated by:
+	      \begin{itemize}
+		      \item Employing multi-year temporal coverage (2018–2020) to smooth anomalies.
+		      \item Applying strict quality assurance filters as detailed in Section~\ref{sec:datasets}.
+		      \item Aggregating data seasonally and over defined geographic tiles to increase signal stability.
+	      \end{itemize}
 
-    \item \textbf{Computational Bottlenecks in Preprocessing and Causal Analysis:} Time series processing over tens of millions of WFMD soundings, MODIS land cover integration, and causality testing (especially PCMCI and Transfer Entropy) are resource-intensive. Mitigation includes:
-    \begin{itemize}
-        \item Adapting all data pipelines to run on Deucalion HPC, with multiprocessing and batch-oriented strategies already implemented in Algorithms presented in \ref{sec:appendixB_summary}.
-        \item Optimizing causality analysis code (e.g., symbolic discretization and surrogate TE testing) in \texttt{utils.py} to scale with large datasets.
-    \end{itemize}
+	\item \textbf{Computational Bottlenecks in Preprocessing and Causal Analysis:} Large-scale processing of satellite observations and causality testing require substantial computational resources, as detailed in Section~\ref{sec:datasets} and Section~\ref{sec:metho_causal_framework}. Mitigation includes:
+	      \begin{itemize}
+		      \item Adapting all data pipelines to run on Deucalion HPC, with multiprocessing and batch-oriented strategies already implemented in Algorithms presented in \ref{sec:appendixB_summary}.
+		      \item Optimizing causality analysis code (e.g., symbolic discretization and surrogate TE testing) in \texttt{utils.py} to scale with large datasets.
+	      \end{itemize}
 
-    \item \textbf{Spurious or Ambiguous Causality Links:} As discussed in the methodology section, time series causality can be affected by autocorrelation, non-stationarity, and latent confounders. To mitigate this:
-    \begin{itemize}
-        \item Multiple causality measures (Granger, Transfer Entropy, PCMCI) are triangulated and applied only after stationarity and linearity testing.
-        \item Statistical correction for multiple hypothesis testing (via FDR or permutation-based TE validation) is employed to avoid false discoveries.
-        \item Domain knowledge and literature benchmarks are used to filter physically implausible links.
-    \end{itemize}
+	\item \textbf{Spurious or Ambiguous Causality Links:} As discussed in the methodology section, time series causality can be affected by autocorrelation, non-stationarity, and latent confounders. To mitigate this:
+	      \begin{itemize}
+		      \item Multiple causality measures (Granger, Transfer Entropy, PCMCI) are triangulated and applied only after stationarity and linearity testing.
+		      \item Statistical correction for multiple hypothesis testing (via FDR or permutation-based TE validation) is employed to avoid false discoveries.
+		      \item Domain knowledge and literature benchmarks are used to filter physically implausible links.
+	      \end{itemize}
 
-    \item \textbf{Interpretation Uncertainty in Spatio-Temporal Results:} Linking atmospheric methane patterns with land cover or environmental covariates (e.g., wetland extent) requires careful inference. This is mitigated by:
-    \begin{itemize}
-        \item Validating findings against known climatological events (e.g., El Niño–La Niña cycles, fire seasons).
-        \item Performing causal graph interpretation in geographically disaggregated regions (e.g., by continent and land cover type).
-        \item Engaging with experts in wetland carbon fluxes and satellite retrievals when needed.
-    \end{itemize}
+	\item \textbf{Interpretation Uncertainty in Spatio-Temporal Results:} Linking atmospheric methane patterns with land cover or environmental covariates (e.g., wetland extent) requires careful inference. This is mitigated by:
+	      \begin{itemize}
+		      \item Validating findings against known climatological events (e.g., El Niño–La Niña cycles, fire seasons).
+		      \item Performing causal graph interpretation in geographically disaggregated regions (e.g., by continent and land cover type).
+		      \item Engaging with experts in wetland carbon fluxes and satellite retrievals when needed.
+	      \end{itemize}
 \end{itemize}
-
 
 \section{Dissemination Plan}
 
 The dissemination strategy for this project targets both scientific and societal audiences, emphasizing open science, interdisciplinary outreach, and climate relevance.
 
 \begin{itemize}
-    \item \textbf{Peer-Reviewed Publications:} The research will be structured around two to three scientific manuscripts. Journals targeted include:
-    \begin{itemize}
-        \item \textit{Remote Sensing of Environment} – Elsevier; SJR: Q1 in Earth and Planetary Sciences. Targeted for methodological innovations in land-atmosphere coupling from satellite time series.
-        \item \textit{Atmospheric Chemistry and Physics} – European Geosciences Union (EGU) \& Copernicus Publications; SJR: Q1 in Atmospheric Science. Suitable for causal analyses involving methane, NO$_2$, and aerosol data.
-        \item \textit{Earth System Science Data} – Copernicus Publications; SJR: Q1 in Earth and Planetary Sciences; or \textit{Environmental Research Letters}, IOP Publishing; SJR: Q1 in Environmental Science. Aimed at reproducible datasets and code releases.
-    \end{itemize}
+	\item \textbf{Peer-Reviewed Publications:} The research will be structured around two to three scientific manuscripts. Journals targeted include:
+	      \begin{itemize}
+		      \item \textit{Remote Sensing of Environment} – Elsevier; SJR: Q1 in Earth and Planetary Sciences. Targeted for methodological innovations in land-atmosphere coupling from satellite time series.
+		      \item \textit{Atmospheric Chemistry and Physics} – European Geosciences Union (EGU) \& Copernicus Publications; SJR: Q1 in Atmospheric Science. Suitable for causal analyses involving methane, NO$_2$, and aerosol data.
+		      \item \textit{Earth System Science Data} – Copernicus Publications; SJR: Q1 in Earth and Planetary Sciences; or \textit{Environmental Research Letters}, IOP Publishing; SJR: Q1 in Environmental Science. Aimed at reproducible datasets and code releases.
+	      \end{itemize}
 
-    \item \textbf{Conference Presentations:} Results will be presented at leading geoscience and remote sensing conferences:
-    \begin{itemize}
-        \item European Geosciences Union (EGU) General Assembly, organized by the European Geosciences Union.
-        \item American Geophysical Union (AGU) Fall Meeting, organized by the American Geophysical Union.
-        \item IEEE IGARSS (International Geoscience and Remote Sensing Symposium), organized by the IEEE Geoscience and Remote Sensing Society (GRSS).
-    \end{itemize}
+	\item \textbf{Conference Presentations:} Results will be presented at leading geoscience and remote sensing conferences:
+	      \begin{itemize}
+		      \item European Geosciences Union (EGU) General Assembly, organized by the European Geosciences Union.
+		      \item American Geophysical Union (AGU) Fall Meeting, organized by the American Geophysical Union.
+		      \item IEEE IGARSS (International Geoscience and Remote Sensing Symposium), organized by the IEEE Geoscience and Remote Sensing Society (GRSS).
+	      \end{itemize}
 
-    \item \textbf{Open Science Contribution:} Following best practices in reproducibility, the final pipeline, including WFMD extraction, MODIS overlay, and causal analysis notebooks, will be released under an open-source license via GitHub. This repository will include:
-    \begin{itemize}
-        \item Data processing and visualization scripts.
-        \item Jupyter notebooks demonstrating causal discovery workflows.
-        \item Sample output data for validation and replication.
-    \end{itemize}
+	\item \textbf{Open Science Contribution:} Following best practices in reproducibility, the complete analytical pipeline implementing the framework detailed in Chapter~\ref{chap:methodology} will be released under an open-source license via GitHub. This repository will include:
+	      \begin{itemize}
+		      \item Data processing and visualization scripts.
+		      \item Jupyter notebooks demonstrating causal discovery workflows.
+		      \item Sample output data for validation and replication.
+	      \end{itemize}
 
-    \item \textbf{Policy-Relevant Outputs:} Based on detected causal patterns (e.g., links between wetland methane emissions and land cover shifts), concise technical briefs will be shared with relevant environmental and climate agencies. These may inform frameworks such as the Global Methane Pledge or regional wetland restoration programs.
+	\item \textbf{Policy-Relevant Outputs:} Based on detected causal patterns (e.g., links between wetland methane emissions and land cover shifts), concise technical briefs will be shared with relevant environmental and climate agencies. These may inform frameworks such as the Global Methane Pledge or regional wetland restoration programs.
 
-    \item \textbf{Educational and Institutional Outreach:} Key visualizations (e.g., seasonal methane-land cover maps, causality matrices) will be used in university lectures or workshops on environmental data science. Collaboration with institutional stakeholders in data repositories (e.g., ESA or Copernicus services) may also be explored.
+	\item \textbf{Educational and Institutional Outreach:} Key visualizations (e.g., seasonal methane-land cover maps, causality matrices) will be used in university lectures or workshops on environmental data science. Collaboration with institutional stakeholders in data repositories (e.g., ESA or Copernicus services) may also be explored.
 \end{itemize}
 

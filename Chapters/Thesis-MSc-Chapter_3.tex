@@ -8,7 +8,6 @@
 % The following line allows to ref this chapter
 \label{chap:methodology}
 
-
 \section{Methodology}
 
 This section describes the methodological strategy developed and implemented over the first two years of the PhD project and the metholodogy of the current causal-guided study. It integrates theoretical foundations in causal inference, remote sensing-based environmental monitoring, and computational modeling with a structured, staged process involving framework validation, dataset selection, and large-scale satellite time series analysis. The methodology is designed to meet the scientific goals of uncovering robust, interpretable, and spatiotemporally resolved causal relationships governing methane variability across diverse land cover and climatic contexts. It includes both exploratory and confirmatory phases, aiming for scalability, reproducibility, and alignment with Earth observation standards.
@@ -29,11 +28,11 @@ The research is theoretically anchored in the field of causal discovery and envi
 Prior to full deployment of the causality framework on large-scale satellite datasets, the first phase of the research involved:
 
 \begin{itemize}
-  \item A thorough \textbf{literature review} to assess the state-of-the-art in satellite-based methane monitoring and causal inference in environmental sciences. This review also incorporated an investigation into Machine Learning applications for methane detection, considering existing ML-ready datasets and exploring both classic and deep learning methodologies.
-    \item An investigation of existing satellite methane datasets, encompassing a comprehensive review of all satellites equipped for methane monitoring (e.g., Sentinel-5P, GOSAT, GHGSat, MethaneSAT, MERLIN, etc.), their respective sensors and payloads (e.g., TROPOMI, TANSO-FTS, imaging spectrometers, LIDAR), and the key differences in their measurement capabilities, spatial and temporal resolutions, and data access policies.
-  \item Development and implementation of a \textbf{modular causal inference framework}, coded in Python, allowing integration with satellite time series workflows.
-  \item \textbf{Validation with synthetic and tiny observational datasets}, including artificial time series with known causal structures and curated regional methane series. This stage was essential to evaluate the sensitivity, false discovery rates, and temporal resolution limitations of the applied methods.
-  \item Establishment of data ingestion and preprocessing pipelines, particularly Google Earth Engine scripts for dynamic querying of MODIS and Sentinel-5P collections.
+	\item A thorough \textbf{literature review} to assess the state-of-the-art in satellite-based methane monitoring and causal inference in environmental sciences. This review also incorporated an investigation into Machine Learning applications for methane detection, considering existing ML-ready datasets and exploring both classic and deep learning methodologies.
+	\item An investigation of existing satellite methane datasets, encompassing a comprehensive review of all satellites equipped for methane monitoring (e.g., Sentinel-5P, GOSAT, GHGSat, MethaneSAT, MERLIN, etc.), their respective sensors and payloads (e.g., TROPOMI, TANSO-FTS, imaging spectrometers, LIDAR), and the key differences in their measurement capabilities, spatial and temporal resolutions, and data access policies.
+	\item Development and implementation of a \textbf{modular causal inference framework}, coded in Python, allowing integration with satellite time series workflows.
+	\item \textbf{Validation with synthetic and tiny observational datasets}, including artificial time series with known causal structures and curated regional methane series. This stage was essential to evaluate the sensitivity, false discovery rates, and temporal resolution limitations of the applied methods.
+	\item Establishment of data ingestion and preprocessing pipelines, particularly Google Earth Engine scripts for dynamic querying of MODIS and Sentinel-5P collections.
 \end{itemize}
 
 These early activities were instrumental in refining model parameters, understanding the behavior of each method under constrained conditions, and optimizing computational strategies for subsequent large-scale applications. Specifically, the synthetic data experiments helped quantify false positive and false negative rates under controlled noise and sampling scenarios, which led to the adoption of stricter thresholding and bootstrapping routines in the linearity assessment and Transfer Entropy implementation. Validation with regional methane datasets also revealed the necessity of preprocessing modules for temporal alignment and variable normalization, which were subsequently integrated into the preprocessing pipeline. These insights directly informed adjustments to the data cleaning routines, causal lag selection strategies, and the parametrization of significance thresholds in the PCMCI framework.
@@ -56,9 +55,9 @@ Data acquisition for the MODIS dataset is performed through automated GEE pipeli
 
 \textbf{Procedures:}
 \begin{enumerate}
-  \item Extraction of methane time series and ancillary variables for each grid cell in the study regions.
-  \item Integration of MODIS-derived categories matched with geographical regions and timestamps.
-  \item Assignment of land cover labels to each observation via a median filter on surrounding MODIS/ESA land cover classifications.
+	\item Extraction of methane time series and ancillary variables for each grid cell in the study regions.
+	\item Integration of MODIS-derived categories matched with geographical regions and timestamps.
+	\item Assignment of land cover labels to each observation via a median filter on surrounding MODIS/ESA land cover classifications.
 \end{enumerate}
 
 \textbf{Instruments:}
@@ -66,7 +65,6 @@ Remote sensing instruments included TROPOMI for trace gases and MODIS for surfac
 
 \textbf{Ethical Considerations:}
 All data utilized are public domain and do not involve human subjects. Ethical rigor was upheld through transparent documentation of the full data processing workflow, from acquisition through analysis. Version-controlled repositories were maintained to track changes in code and data, allowing full reproducibility. Data traceability was further ensured by logging metadata for each satellite product, including access timestamps, processing steps, and geographic regions involved. The project adheres to the FAIR data principles, promoting the findability, accessibility, interoperability, and reusability of all materials produced.
-
 
 \subsection{Justification and Limitations}
 
@@ -88,169 +86,214 @@ While approaches such as Bayesian networks or structural equation modeling were 
 This methodology outlines a causal framework for transforming raw multi-sensor satellite observations into robust causal statements about methane (\ch{XCH4}) variability, addressing the spatiotemporal and statistical challenges of satellite-based causal discovery. The framework integrates two interconnected pipelines: a data processing pipeline to prepare high-quality, stratified datasets and a causal analysis pipeline to infer and interpret causal relationships. These pipelines support research Objectives 1-7 (Section \ref{sec:research-objectives}) by ensuring data quality, identifying causal drivers, and providing interpretable results.
 
 \begin{figure}[htbp]
-\centering
-\begin{tikzpicture}[
-    node distance=2cm,
-    box/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1.2cm, align=center, fill=blue!10},
-    data/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=green!10},
-    arrow/.style={->, thick, blue},
-    stepnode/.style={rectangle, draw, rounded corners, minimum width=2cm, minimum height=0.6cm, align=center, fill=orange!10}
-]
-% Input data
-\node[data] (input) at (0,0) {WFMD\\NetCDF Files};
-% Step 1
-\node[box] (step1) at (4,0) {Step 1: Data Extraction\\Parallel NetCDF Processing};
-\node[data] (data1) at (8,0) {methane\_all01.txt};
-% Step 2
-\node[box] (step2) at (4,-2.5) {Step 2: Land Cover\\Classification};
-\node[data] (data2) at (8,-2.5) {methane\_all02.txt};
-% Step 3
-\node[box] (step3) at (4,-5) {Step 3: Histogram\\Generation \& Means};
-\node[data] (data3) at (8,-5) {Continent-Season\\Histograms \& matrix.csv};
-% Step 4
-\node[box] (step4) at (4,-7.5) {Step 4: Heatmap\\Visualization};
-\node[data] (data4) at (8,-7.5) {Matrix Heatmaps};
-% Step 5
-\node[box] (step5) at (4,-10) {Step 5: Land Cover\\Deviation Analysis};
-\node[data] (data5) at (8,-10) {Deviation Heatmaps};
-% Algorithm labels
-\node[stepnode] (alg1) at (0,-1.2) {Algorithm 1 \ref{alg:step01_extract}};
-\node[stepnode] (alg2) at (0,-3.7) {Algorithm 2 \ref{alg:step02_add_lc}};
-\node[stepnode] (alg3) at (0,-6.2) {Algorithm 3 \ref{alg:step03_histos}};
-\node[stepnode] (alg4) at (0,-8.7) {Algorithm 4 \ref{alg:step04_heatmap}};
-\node[stepnode] (alg5) at (0,-11.2) {Algorithm 5 \ref{alg:step05_health_check}};
-% Arrows
-\draw[arrow] (input) -- (step1);
-\draw[arrow] (step1) -- (data1);
-\draw[arrow] (data1) -- (step2);
-\draw[arrow] (step2) -- (data2);
-\draw[arrow] (data2) -- (step3);
-\draw[arrow] (step3) -- (data3);
-\draw[arrow] (data3) -- (step4);
-\draw[arrow] (step4) -- (data4);
-\draw[arrow] (data4) -- (step5);
-\draw[arrow] (step5) -- (data5);
-% Algorithm references
-\draw[arrow, dashed] (alg1) -- (step1);
-\draw[arrow, dashed] (alg2) -- (step2);
-\draw[arrow, dashed] (alg3) -- (step3);
-\draw[arrow, dashed] (alg4) -- (step4);
-\draw[arrow, dashed] (alg5) -- (step5);
-% Legend
-\node[draw, rounded corners, fill=white, thick, inner sep=5pt] (legend) at (12,-3) {
-    \begin{tikzpicture}[
-        box/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=blue!10},
-        data/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=green!10},
-        stepnode/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=orange!10}
-    ]
-        \node[box]      (l1) at (0,0)   {Processing Steps};
-        \node[data]     (l2) at (0,-1)  {Data Files};
-        \node[stepnode] (l3) at (0,-2)  {Algorithm Labels};
-    \end{tikzpicture}
-};
-\end{tikzpicture}
-\caption{Data processing pipeline for methane analysis, transforming raw WFMD NetCDF files into stratified datasets through extraction, classification, histogram generation with means computation, visualization, and land cover deviation analysis.}
-\label{fig:pipeline_workflow}
+	\centering
+	\begin{tikzpicture}[
+			node distance=2cm,
+			box/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1.2cm, align=center, fill=blue!10},
+			data/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=green!10},
+			arrow/.style={->, thick, blue},
+			stepnode/.style={rectangle, draw, rounded corners, minimum width=2cm, minimum height=0.6cm, align=center, fill=orange!10}
+		]
+		% Input data
+		\node[data] (input) at (0,0) {WFMD\\NetCDF Files};
+		% Step 1
+		\node[box] (step1) at (4,0) {Step 1: Data Extraction\\Parallel NetCDF Processing};
+		\node[data] (data1) at (8,0) {methane\_all01.txt};
+		% Step 2
+		\node[box] (step2) at (4,-2.5) {Step 2: Land Cover\\Classification};
+		\node[data] (data2) at (8,-2.5) {methane\_all02.txt};
+		% Step 3
+		\node[box] (step3) at (4,-5) {Step 3: Histogram\\Generation \& Means};
+		\node[data] (data3) at (8,-5) {Continent-Season\\Histograms \& matrix.csv};
+		% Step 4
+		\node[box] (step4) at (4,-7.5) {Step 4: Heatmap\\Visualization};
+		\node[data] (data4) at (8,-7.5) {Matrix Heatmaps};
+		% Step 5
+		\node[box] (step5) at (4,-10) {Step 5: Land Cover\\Deviation Analysis};
+		\node[data] (data5) at (8,-10) {Deviation Heatmaps};
+		% Algorithm labels
+		\node[stepnode] (alg1) at (0,-1.2) {Algorithm 1 \ref{alg:step01_extract}};
+		\node[stepnode] (alg2) at (0,-3.7) {Algorithm 2 \ref{alg:step02_add_lc}};
+		\node[stepnode] (alg3) at (0,-6.2) {Algorithm 3 \ref{alg:step03_histos}};
+		\node[stepnode] (alg4) at (0,-8.7) {Algorithm 4 \ref{alg:step04_heatmap}};
+		\node[stepnode] (alg5) at (0,-11.2) {Algorithm 5 \ref{alg:step05_health_check}};
+		% Arrows
+		\draw[arrow] (input) -- (step1);
+		\draw[arrow] (step1) -- (data1);
+		\draw[arrow] (data1) -- (step2);
+		\draw[arrow] (step2) -- (data2);
+		\draw[arrow] (data2) -- (step3);
+		\draw[arrow] (step3) -- (data3);
+		\draw[arrow] (data3) -- (step4);
+		\draw[arrow] (step4) -- (data4);
+		\draw[arrow] (data4) -- (step5);
+		\draw[arrow] (step5) -- (data5);
+		% Algorithm references
+		\draw[arrow, dashed] (alg1) -- (step1);
+		\draw[arrow, dashed] (alg2) -- (step2);
+		\draw[arrow, dashed] (alg3) -- (step3);
+		\draw[arrow, dashed] (alg4) -- (step4);
+		\draw[arrow, dashed] (alg5) -- (step5);
+		% Legend
+		\node[draw, rounded corners, fill=white, thick, inner sep=5pt] (legend) at (12,-3) {
+			\begin{tikzpicture}[
+					box/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=blue!10},
+					data/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=green!10},
+					stepnode/.style={rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=0.8cm, align=center, fill=orange!10}
+				]
+				\node[box]      (l1) at (0,0)   {Processing Steps};
+				\node[data]     (l2) at (0,-1)  {Data Files};
+				\node[stepnode] (l3) at (0,-2)  {Algorithm Labels};
+			\end{tikzpicture}
+		};
+	\end{tikzpicture}
+	\caption[Data processing pipeline for methane analysis]{Data processing pipeline for methane analysis, transforming raw WFMD NetCDF files into stratified datasets through extraction, classification, histogram generation with means computation, visualization, and land cover deviation analysis.}
+	\label{fig:pipeline_workflow}
 \end{figure}
 
-The data processing pipeline, depicted in Figure~\ref{fig:pipeline_workflow}, transforms raw NetCDF files from the Sentinel-5P TROPOMI/WFMD methane product~\cite{TROPOMI_WFMD_PUG} into structured datasets stratified by region and land cover. The extraction process begins with temporal standardization, converting satellite timestamps to Modified Julian Days (MJD) through either Unix epoch conversion  
+The data processing pipeline, depicted in Figure~\ref{fig:pipeline_workflow}, transforms raw NetCDF files from the Sentinel-5P TROPOMI/WFMD methane product~\cite{TROPOMI_WFMD_PUG} into structured datasets stratified by region and land cover. The extraction process begins with temporal standardization, converting satellite timestamps to Modified Julian Days (MJD) through either Unix epoch conversion
 \[
-\mathrm{MJD} = \frac{t}{86400} + 40587.0
-\]  
-(for numerical timestamps) or datetime64 conversion  
-\[
-\mathrm{MJD} = \frac{t - \mathrm{MJD}_{\mathrm{epoch}}}{\Delta t_{\mathrm{day}}}
-\]  
-(for datetime objects), where $\mathrm{MJD}_{\mathrm{epoch}} = \text{1858-11-17}$. This creates a continuous time index essential for temporal alignment.  
-
-Key atmospheric variables are extracted into a matrix $\mathbf{X} \in \mathbb{R}^{n \times 8}$ containing index, MJD, coordinates, \ch{XCH4}, associated uncertainties, and \ch{XCO}. Parallel processing enables scalable integration through chunked array decomposition  
-\[
-\mathbf{X} = \bigcup_{k=1}^{K} \mathbf{X}_k, \quad K = \left\lceil \frac{N}{\mathrm{chunk\_size}} \right\rceil ,
+	\mathrm{MJD} = \frac{t}{86400} + 40587.0
 \]
-thereby supporting Objective~1.  
+(for numerical timestamps) or datetime64 conversion
+\[
+	\mathrm{MJD} = \frac{t - \mathrm{MJD}_{\mathrm{epoch}}}{\Delta t_{\mathrm{day}}}
+\]
+(for datetime objects), where $\mathrm{MJD}_{\mathrm{epoch}} = \text{1858-11-17}$. This creates a continuous time index essential for temporal alignment.
 
-Land cover classification integrates MODIS LC\_Type1 data through spatial–temporal queries  
+Key atmospheric variables are extracted into a matrix $\mathbf{X} \in \mathbb{R}^{n \times 8}$ containing index, MJD, coordinates, \ch{XCH4}, associated uncertainties, and \ch{XCO}. Parallel processing enables scalable integration through chunked array decomposition
 \[
-\mathrm{LC}(x,y,t) = \mathrm{median}(\mathrm{img.sampleRegions}(x,y)),
-\]  
-where $\mathrm{img} \in \mathcal{C}$ (MODIS/061/MCD12Q1 filtered to $t \pm 183$~days). Non-terrestrial pixels are filtered using  
-\[
-\mathbf{X}_{\mathrm{land}} = \{ \mathbf{x}_i \in \mathbf{X} \mid \mathrm{LC}_i \notin \{0,17\} \},
-\]  
-creating land-cover-specific subsets $\mathbf{X}_{\mathrm{cropland}}, \mathbf{X}_{\mathrm{wetland}}, \ldots$ to enable stratified causal analysis (Objective~4).  
+	\mathbf{X} = \bigcup_{k=1}^{K} \mathbf{X}_k, \quad K = \left\lceil \frac{N}{\mathrm{chunk\_size}} \right\rceil ,
+\]
+thereby supporting Objective~1.
 
-Spatiotemporal aggregation follows seasonal masks defined by MJD boundaries $\mathcal{S} = \{s_1, \dots, s_{12}\}$, where  
+Land cover classification integrates MODIS LC\_Type1 data through spatial–temporal queries
 \[
-\mathrm{Season}_k = [s_k, s_{k+1}] \cup [s_{k+4}, s_{k+5}], \quad k \in \{0,1,2,3\},
-\]  
-and all timepoints for $k=4$. Continent–season aggregates are computed as  
+	\mathrm{LC}(x,y,t) = \mathrm{median}(\mathrm{img.sampleRegions}(x,y)),
+\]
+where $\mathrm{img} \in \mathcal{C}$ (MODIS/061/MCD12Q1 filtered to $t \pm 183$~days). Non-terrestrial pixels are filtered using
 \[
-\overline{\mathrm{XCH}_4}^{(c,k)} = \frac{1}{|\mathcal{I}_{c,k}|} \sum_{i \in \mathcal{I}_{c,k}} \mathrm{XCH}_4^{(i)},
-\]  
-with $\mathcal{I}_{c,k} = \{ i \mid \mathbf{x}_i \in \mathrm{Continent}_c \cap \mathrm{Season}_k \}$. Histogram binning $P(\mathrm{XCH}_4 \mid c,k)$ uses adaptive bandwidth  
-\[
-h = 0.9 \cdot \min(\sigma, \mathrm{IQR}/1.34) \cdot n^{-1/5}
-\]  
-to quantify land-surface influences (Objective~2).  
+	\mathbf{X}_{\mathrm{land}} = \{ \mathbf{x}_i \in \mathbf{X} \mid \mathrm{LC}_i \notin \{0,17\} \},
+\]
+creating land-cover-specific subsets $\mathbf{X}_{\mathrm{cropland}}, \mathbf{X}_{\mathrm{wetland}}, \ldots$ to enable stratified causal analysis (Objective~4).
 
-Anomaly detection employs matrix decomposition  
+Spatiotemporal aggregation follows seasonal masks defined by MJD boundaries $\mathcal{S} = \{s_1, \dots, s_{12}\}$, where
 \[
-\mathbf{M} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top
-\]  
-where $\mathbf{M} = [\overline{\mathrm{XCH}_4}^{(c,k)}]$. Anomalies are isolated via  
+	\mathrm{Season}_k = [s_k, s_{k+1}] \cup [s_{k+4}, s_{k+5}], \quad k \in \{0,1,2,3\},
+\]
+and all timepoints for $k=4$. Continent–season aggregates are computed as
 \[
-\mathbf{M}_{\mathrm{anom}} = \mathbf{u}_1 \sigma_1 \mathbf{v}_1^\top
-\]  
-to identify regions exceeding $\pm 2\sigma$ residuals. Land-cover deviation analysis computes class-specific anomalies  
+	\overline{\mathrm{XCH}_4}^{(c,k)} = \frac{1}{|\mathcal{I}_{c,k}|} \sum_{i \in \mathcal{I}_{c,k}} \mathrm{XCH}_4^{(i)},
+\]
+with $\mathcal{I}_{c,k} = \{ i \mid \mathbf{x}_i \in \mathrm{Continent}_c \cap \mathrm{Season}_k \}$. Histogram binning $P(\mathrm{XCH}_4 \mid c,k)$ uses adaptive bandwidth
 \[
-\delta\mathrm{LC}^{(c,k,l)} = \overline{\mathrm{XCH}_4}^{(c,k,l)} - \overline{\mathrm{XCH}_4}^{(c,k,\mathrm{all})}
-\]  
-for $l \in \{\mathrm{classes\ 1\!-\!16}\}$, generating heatmaps $\mathbf{H} = [\delta\mathrm{LC}^{(c,k,l)}]$ that distinguish retrieval artifacts from true emissions (Objective~5). Each stage produces intermediate outputs ensuring modularity and reproducibility.  
+	h = 0.9 \cdot \min(\sigma, \mathrm{IQR}/1.34) \cdot n^{-1/5}
+\]
+to quantify land-surface influences (Objective~2).
 
-The causal analysis pipeline incorporates additional atmospheric variables (\ch{CO}, \ch{NO2}, \ch{H2O}, AOD) with temporal harmonization  
+Anomaly detection employs matrix decomposition
 \[
-\mathbf{Z}_t^{\mathrm{align}} = \mathbf{W} \mathbf{Z}_t, \quad \mathbf{W}_{ij} = \exp\!\left( -\frac{(t_i - t_j)^2}{2\tau^2} \right), \quad \tau = 7\ \mathrm{days}.
-\]  
-Quality control removes high-uncertainty observations, while seasonal–trend decomposition and differencing  
+	\mathbf{M} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top
+\]
+where $\mathbf{M} = [\overline{\mathrm{XCH}_4}^{(c,k)}]$. Anomalies are isolated via
 \[
-\nabla_L \mathrm{XCH}_4^{(t)} = \mathrm{XCH}_4^{(t)} - \mathrm{XCH}_4^{(t-L)}, \quad L=365
-\]  
-achieve stationarity, verified via Augmented Dickey–Fuller tests ($p<0.01$). Relationships are assessed through Mutual Information  
+	\mathbf{M}_{\mathrm{anom}} = \mathbf{u}_1 \sigma_1 \mathbf{v}_1^\top
+\]
+to identify regions exceeding $\pm 2\sigma$ residuals. Land-cover deviation analysis computes class-specific anomalies
 \[
-I(X;Y) = \sum p(x,y) \log \frac{p(x,y)}{p(x)p(y)}
-\]  
-and correlation metrics, guiding method selection.  
+	\delta\mathrm{LC}^{(c,k,l)} = \overline{\mathrm{XCH}_4}^{(c,k,l)} - \overline{\mathrm{XCH}_4}^{(c,k,\mathrm{all})}
+\]
+for $l \in \{\mathrm{classes\ 1\!-\!16}\}$, generating heatmaps $\mathbf{H} = [\delta\mathrm{LC}^{(c,k,l)}]$ that distinguish retrieval artifacts from true emissions (Objective~5). Each stage produces intermediate outputs ensuring modularity and reproducibility.
 
+The causal analysis pipeline incorporates additional atmospheric variables (\ch{CO}, \ch{NO2}, \ch{H2O}, AOD) with temporal harmonization
+\[
+	\mathbf{Z}_t^{\mathrm{align}} = \mathbf{W} \mathbf{Z}_t, \quad \mathbf{W}_{ij} = \exp\!\left( -\frac{(t_i - t_j)^2}{2\tau^2} \right), \quad \tau = 7\ \mathrm{days}.
+\]
+Quality control removes high-uncertainty observations, while seasonal–trend decomposition and differencing
+\[
+	\nabla_L \mathrm{XCH}_4^{(t)} = \mathrm{XCH}_4^{(t)} - \mathrm{XCH}_4^{(t-L)}, \quad L=365
+\]
+achieve stationarity, verified via Augmented Dickey–Fuller tests ($p<0.01$). Relationships are assessed through Mutual Information
+\[
+	I(X;Y) = \sum p(x,y) \log \frac{p(x,y)}{p(x)p(y)}
+\]
+and correlation metrics, guiding method selection.
 
-Causal inference in this framework relies on three complementary approaches. First, Granger causality, given by 
+Causal inference in this framework relies on three complementary approaches. First, Granger causality, given by
 
 \[
-F_{\mathrm{Granger}} = \frac{(\mathrm{RSS}_{\mathrm{null}} - \mathrm{RSS}_{\mathrm{full}})/p}{\mathrm{RSS}_{\mathrm{full}}/(T - 2p)},
-\]  
-tests for linear directional influence between time series. Second, transfer entropy,  
+	F_{\mathrm{Granger}} = \frac{(\mathrm{RSS}_{\mathrm{null}} - \mathrm{RSS}_{\mathrm{full}})/p}{\mathrm{RSS}_{\mathrm{full}}/(T - 2p)},
+\]
+tests for linear directional influence between time series. Second, transfer entropy,
 \[
-\mathcal{T}_{Y \to X} = \sum p(x_{t+1},x_t,y_t) \log \frac{p(x_{t+1} \mid x_t, y_t)}{p(x_{t+1} \mid x_t)},
-\]  
-quantifies nonlinear information flow by measuring how much knowing the past of $Y$ improves predictions of $X$. Third, the PCMCI algorithm detects conditional independence via  
+	\mathcal{T}_{Y \to X} = \sum p(x_{t+1},x_t,y_t) \log \frac{p(x_{t+1} \mid x_t, y_t)}{p(x_{t+1} \mid x_t)},
+\]
+quantifies nonlinear information flow by measuring how much knowing the past of $Y$ improves predictions of $X$. Third, the PCMCI algorithm detects conditional independence via
 \[
-\phi_{\mathrm{CI}} = \max_k |\mathrm{ParCorr}(X_t, Y_{t-\tau} \mid \mathbf{Z}^k)|,
-\]  
+	\phi_{\mathrm{CI}} = \max_k |\mathrm{ParCorr}(X_t, Y_{t-\tau} \mid \mathbf{Z}^k)|,
+\]
 while explicitly addressing autocorrelation effects. Multiple testing corrections are applied across all methods to ensure robustness in high-dimensional settings.
 
-Results are expressed as Directed Acyclic Graphs (DAGs) with Shapley-based attribution  
+Results are expressed as Directed Acyclic Graphs (DAGs) with Shapley-based attribution
 \[
-\phi_j = \sum_{\mathcal{S} \subseteq \mathcal{J} \setminus \{j\}}
-\frac{|\mathcal{S}|! \,(|\mathcal{J}| - |\mathcal{S}| - 1)!}{|\mathcal{J}|!}
-\left[ f(\mathbf{x}_{\mathcal{S} \cup \{j\}}) - f(\mathbf{x}_{\mathcal{S}}) \right]
-\]  
-quantifying driver importance (Objective~7). Local surrogate models  
+	\phi_j = \sum_{\mathcal{S} \subseteq \mathcal{J} \setminus \{j\}}
+	\frac{|\mathcal{S}|! \,(|\mathcal{J}| - |\mathcal{S}| - 1)!}{|\mathcal{J}|!}
+	\left[ f(\mathbf{x}_{\mathcal{S} \cup \{j\}}) - f(\mathbf{x}_{\mathcal{S}}) \right]
+\]
+quantifying driver importance (Objective~7). Local surrogate models
 \[
-\mathcal{L}(f,g,\pi_x) = \sum (f(z) - g(z))^2 + \Omega(g)
-\]  
-provide instance-level explanations, while spatial–temporal visualizations contextualize findings. This framework delivers land-cover-specific time series $\{\mathbf{X}_{\mathrm{LC}_i}\}_{i=1}^{17}$ (Objective~4), heatmaps $\mathbf{H}$ identifying emission sources (Objective~5), and DAGs with $\phi_j$-weighted edges for policy attribution (Objective~6), establishing reproducible causal attribution that addresses satellite data challenges.  
+	\mathcal{L}(f,g,\pi_x) = \sum (f(z) - g(z))^2 + \Omega(g)
+\]
+provide instance-level explanations, while spatial–temporal visualizations contextualize findings. This framework delivers land-cover-specific time series $\{\mathbf{X}_{\mathrm{LC}_i}\}_{i=1}^{17}$ (Objective~4), heatmaps $\mathbf{H}$ identifying emission sources (Objective~5), and DAGs with $\phi_j$-weighted edges for policy attribution (Objective~6), establishing reproducible causal attribution that addresses satellite data challenges.
 
 This ongoing research effort evolves with new datasets and methodological advances, promoting causal analysis in operational Earth observation (Objective~7). The modular design supports integration of additional drivers such as wetland maps, refining scientific standards for methane attribution aligned with ESA and IPCC priorities.
 
+\subsection{Comparative Evaluation Protocol}
+\label{sec:comparative_evaluation}
+
+To address Research Objective 3—systematically comparing correlation-based analysis with causal discovery methods—this study implements a comprehensive comparative evaluation protocol. This protocol enables rigorous assessment of each approach's strengths, limitations, and complementarity in identifying methane-environmental relationships, providing empirical insights into when each methodology is most appropriate for satellite-based environmental monitoring.
+
+\subsubsection{Methodological Framework for Comparison}
+
+The comparative evaluation employs a multi-criteria assessment framework that evaluates both correlation-based and causal discovery approaches across several dimensions:
+
+\textbf{Statistical Performance Metrics:}
+\begin{itemize}
+	\item \textbf{Predictive accuracy}: Cross-validated mean squared error and R² for time series forecasting
+	\item \textbf{Stability}: Consistency of identified relationships across temporal subsets and bootstrapped samples
+	\item \textbf{Statistical significance}: P-values, confidence intervals, and multiple testing correction performance
+	\item \textbf{Effect size quantification}: Magnitude and practical significance of identified relationships
+\end{itemize}
+
+\textbf{Interpretability and Mechanism Discovery:}
+\begin{itemize}
+	\item \textbf{Directionality}: Ability to determine causal direction versus symmetric association
+	\item \textbf{Lag structure identification}: Temporal dynamics and delay detection capabilities
+	\item \textbf{Confounding control}: Effectiveness in distinguishing direct from mediated relationships
+	\item \textbf{Policy relevance}: Actionability of insights for intervention design
+\end{itemize}
+
+\textbf{Robustness Assessment:}
+\begin{itemize}
+	\item \textbf{Noise sensitivity}: Performance degradation under varying signal-to-noise conditions
+	\item \textbf{Sample size requirements}: Minimum data requirements for reliable inference
+	\item \textbf{Assumption violations}: Behavior under non-stationarity, nonlinearity, and missing data
+	\item \textbf{Cross-ecosystem generalization}: Consistency of findings across different land cover types
+\end{itemize}
+
+\subsubsection{Implementation Strategy}
+
+The comparative evaluation is implemented through parallel analysis tracks applied to identical datasets:
+
+\textbf{Correlation-Based Track}: Implements Pearson and Spearman correlation, partial correlation controlling for temporal trends, time-lagged cross-correlation (TLCC), and canonical correlation analysis for multivariate relationships.
+
+\textbf{Causal Discovery Track}: Applies the integrated framework (Granger causality, Transfer Entropy, PCMCI+) with identical preprocessing and significance testing protocols.
+
+\textbf{Synthetic Validation}: Both approaches are first validated on synthetic datasets with known ground truth causal structures, enabling quantification of false discovery rates and statistical power under controlled conditions.
+
+\textbf{Real-Data Application}: Parallel application to satellite methane time series enables assessment of practical performance differences and complementarity in identifying environmental drivers.
+
+This systematic comparison protocol ensures that Research Objective 3 is addressed with methodological rigor, providing empirical evidence for the added value of causal discovery approaches while acknowledging the continued utility of correlation-based methods in appropriate contexts.
 
 %%%%%%%%%%%%%%%%%%%
 
@@ -268,7 +311,7 @@ TROPOMI is an imaging spectrometer onboard the Sentinel-5 Precursor satellite, o
 The WFMD algorithm retrieves column-averaged dry-air mole fractions of methane, denoted as XCH\textsubscript{4}, by analyzing spectral radiances in the SWIR bands. Specifically, the algorithm exploits the absorption characteristics of methane near 2.3~\textmu m. XCH\textsubscript{4} is estimated through the following relationship:
 
 \begin{equation}
-\mathrm{XCH}_4 = \frac{\int_{p_\mathrm{surf}}^{p_\mathrm{top}} q_{\mathrm{CH}_4}(p) \cdot \mathrm{AMF}(p) \, dp}{\int_{p_\mathrm{surf}}^{p_\mathrm{top}} q_{\mathrm{dry}}(p) \cdot \mathrm{AMF}(p) \, dp}
+	\mathrm{XCH}_4 = \frac{\int_{p_\mathrm{surf}}^{p_\mathrm{top}} q_{\mathrm{CH}_4}(p) \cdot \mathrm{AMF}(p) \, dp}{\int_{p_\mathrm{surf}}^{p_\mathrm{top}} q_{\mathrm{dry}}(p) \cdot \mathrm{AMF}(p) \, dp}
 \end{equation}
 
 where $q_{\mathrm{CH}_4}(p)$ and $q_{\mathrm{dry}}(p)$ represent the vertical profiles of the mixing ratios of methane and dry air, respectively, and $\mathrm{AMF}(p)$ denotes the air mass factor, which accounts for the effects of atmospheric scattering and absorption \cite{Schneising2019, Schneising2023}.
@@ -277,10 +320,10 @@ where $q_{\mathrm{CH}_4}(p)$ and $q_{\mathrm{dry}}(p)$ represent the vertical pr
 The WFMD TROPOMI XCH\textsubscript{4} dataset is characterized by the following properties:
 
 \begin{itemize}
-    \item \textbf{Temporal Coverage}: From October 2017 to December 2024 (still processing 2025) with daily global observations.
-    \item \textbf{Spatial Resolution}: Approximately 7~$\times$~7~km\textsuperscript{2} at nadir, improved to about 5.5~$\times$~7~km\textsuperscript{2} after August 2019 \cite{Schneising2023}.
-    \item \textbf{Variables Included}: Column-averaged methane concentration (XCH\textsubscript{4}), retrieval uncertainties, carbon monoxide (CO), geolocation coordinates, and auxiliary metadata (e.g., surface albedo, cloud fraction).
-    \item \textbf{Quality Assurance}: Stringent quality control is applied through multiple flags related to cloud coverage, aerosol loading, viewing geometry, and instrument anomalies. Observations exceeding a cloud fraction threshold (typically 0.2), exhibiting high aerosol optical depths, or associated with anomalous retrieval errors are filtered out to ensure data robustness.
+	\item \textbf{Temporal Coverage}: From October 2017 to December 2024 (still processing 2025) with daily global observations.
+	\item \textbf{Spatial Resolution}: Approximately 7~$\times$~7~km\textsuperscript{2} at nadir, improved to about 5.5~$\times$~7~km\textsuperscript{2} after August 2019 \cite{Schneising2023}.
+	\item \textbf{Variables Included}: Column-averaged methane concentration (XCH\textsubscript{4}), retrieval uncertainties, carbon monoxide (CO), geolocation coordinates, and auxiliary metadata (e.g., surface albedo, cloud fraction).
+	\item \textbf{Quality Assurance}: Stringent quality control is applied through multiple flags related to cloud coverage, aerosol loading, viewing geometry, and instrument anomalies. Observations exceeding a cloud fraction threshold (typically 0.2), exhibiting high aerosol optical depths, or associated with anomalous retrieval errors are filtered out to ensure data robustness.
 \end{itemize}
 
 \subsubsection{Data Accessibility and Format}
@@ -289,17 +332,16 @@ TROPOMI / WFMD XCH\textsubscript{4} data are publicly available in NetCDF format
 \subsubsection{Application in Causal Analysis}
 Owing to its fine temporal and spatial resolution, the WFMD XCH\textsubscript{4} dataset is particularly well-suited for causal inference studies in atmospheric methane dynamics. The integration of ancillary environmental and land-cover datasets enables the disambiguation of observed correlations and supports the derivation of causally grounded conclusions. This capability is essential for advancing policy-relevant insights and targeted emission mitigation strategies.
 
-
 \subsection{Land Cover Data}
 The land cover data employed in this study are derived from the "MCD12Q1.061 MODIS Land Cover Type Yearly Global 500m" dataset. This product originates from the Moderate Resolution Imaging Spectroradiometer (MODIS) sensors aboard NASA’s Terra and Aqua satellites. The MCD12Q1 Version 6.1 dataset provides annual global land cover classifications at a spatial resolution of 500 meters, integrating observations from both platforms to improve temporal consistency and spatial coverage. It is produced and maintained by the NASA Land Processes Distributed Active Archive Center (LP DAAC) at the USGS Earth Resources Observation and Science (EROS) Center and is accessible via both the Earth Engine Catalog \cite{modis_lc_ee} and the LAADS DAAC \cite{laads_daac}. This dataset is instrumental for climate, hydrological, and biogeochemical modeling efforts, as it characterizes the spatial heterogeneity of vegetation types and land surface properties on a global scale.
 
 \subsubsection{Key Specifications}
 \begin{itemize}
-    \item \textbf{Temporal coverage:} 2001 to 2023 (annual cadence).
-    \item \textbf{Spatial resolution:} 500 meters per pixel.
-    \item \textbf{Geographic coverage:} Global.
-    \item \textbf{Data format:} HDF-EOS Grid with multiple science dataset layers (SDSs).
-    \item \textbf{Projection:} Sinusoidal projection with global tiling system.
+	\item \textbf{Temporal coverage:} 2001 to 2023 (annual cadence).
+	\item \textbf{Spatial resolution:} 500 meters per pixel.
+	\item \textbf{Geographic coverage:} Global.
+	\item \textbf{Data format:} HDF-EOS Grid with multiple science dataset layers (SDSs).
+	\item \textbf{Projection:} Sinusoidal projection with global tiling system.
 \end{itemize}
 
 The dataset is accessible via Earth Engine: \url{https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MCD12Q1} and through LAADS DAAC \url{https://ladsweb.modaps.eosdis.nasa.gov}.
@@ -307,83 +349,134 @@ The dataset is accessible via Earth Engine: \url{https://developers.google.com/e
 \subsubsection{Classification Schemes}
 The product includes land cover classifications derived from five major schemes:
 \begin{itemize}
-    \item \textbf{LC\_Type1:} IGBP (International Geosphere-Biosphere Programme)
-    \item \textbf{LC\_Type2:} University of Maryland (UMD)
-    \item \textbf{LC\_Type3:} Leaf Area Index/Biome (LAI/FPAR)
-    \item \textbf{LC\_Type4:} Biome-Biogeochemical Cycles (BGC)
-    \item \textbf{LC\_Type5:} Plant Functional Types (PFT)
+	\item \textbf{LC\_Type1:} IGBP (International Geosphere-Biosphere Programme)
+	\item \textbf{LC\_Type2:} University of Maryland (UMD)
+	\item \textbf{LC\_Type3:} Leaf Area Index/Biome (LAI/FPAR)
+	\item \textbf{LC\_Type4:} Biome-Biogeochemical Cycles (BGC)
+	\item \textbf{LC\_Type5:} Plant Functional Types (PFT)
 \end{itemize}
 
 Each scheme classifies land cover into thematic categories with specific ecological and biogeophysical implications. For example, the IGBP scheme (LC\_Type1) distinguishes 17 land cover types, including forests, savannas, croplands, wetlands, and urban areas. Table~\ref{tab:igbp_classes} lists the IGBP classes and their corresponding integer values.
 
 \begin{table}[htbp]
-    \centering
-    \caption{IGBP Land Cover Classes (LC\_Type1)}
-    \label{tab:igbp_classes}
-    \begin{tabular}{ll}
-        \toprule
-        \textbf{Value} & \textbf{Description} \\
-        \midrule
-        0 & Water Bodies \\
-        1 & Evergreen Needleleaf Forests \\
-        2 & Evergreen Broadleaf Forests \\
-        3 & Deciduous Needleleaf Forests \\
-        4 & Deciduous Broadleaf Forests \\
-        5 & Mixed Forests \\
-        6 & Closed Shrublands \\
-        7 & Open Shrublands \\
-        8 & Woody Savannas \\
-        9 & Savannas \\
-        10 & Grasslands \\
-        11 & Permanent Wetlands \\
-        12 & Croplands \\
-        13 & Urban and Built-Up Lands \\
-        14 & Cropland/Natural Vegetation Mosaics \\
-        15 & Permanent Snow and Ice \\
-        16 & Barren or Sparsely Vegetated \\
-        254 & Unclassified (cloud, missing data, etc.) \\
-        255 & Fill value \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption[IGBP Land Cover Classes]{IGBP Land Cover Classes (LC\_Type1)}
+	\label{tab:igbp_classes}
+	\begin{tabular}{ll}
+		\toprule
+		\textbf{Value} & \textbf{Description}                     \\
+		\midrule
+		0              & Water Bodies                             \\
+		1              & Evergreen Needleleaf Forests             \\
+		2              & Evergreen Broadleaf Forests              \\
+		3              & Deciduous Needleleaf Forests             \\
+		4              & Deciduous Broadleaf Forests              \\
+		5              & Mixed Forests                            \\
+		6              & Closed Shrublands                        \\
+		7              & Open Shrublands                          \\
+		8              & Woody Savannas                           \\
+		9              & Savannas                                 \\
+		10             & Grasslands                               \\
+		11             & Permanent Wetlands                       \\
+		12             & Croplands                                \\
+		13             & Urban and Built-Up Lands                 \\
+		14             & Cropland/Natural Vegetation Mosaics      \\
+		15             & Permanent Snow and Ice                   \\
+		16             & Barren or Sparsely Vegetated             \\
+		254            & Unclassified (cloud, missing data, etc.) \\
+		255            & Fill value                               \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \subsubsection{Ancillary Layers}
 Additional layers provide metadata and quality assurance:
 \begin{itemize}
-    \item \textbf{Land Cover Property layers (LC\_Prop1 to LC\_Prop3):} FAO LCCS-based assessments of land cover, land use, and surface hydrology.
-    \item \textbf{Assessment Confidence Layers (LC\_Prop1\_Assessment to LC\_Prop3\_Assessment):} Confidence scores ranging from 0 to 100\%.
-    \item \textbf{QC:} Quality control flags identifying data validity and processing anomalies.
-    \item \textbf{LW:} Land/water mask.
+	\item \textbf{Land Cover Property layers (LC\_Prop1 to LC\_Prop3):} FAO LCCS-based assessments of land cover, land use, and surface hydrology.
+	\item \textbf{Assessment Confidence Layers (LC\_Prop1\_Assessment to LC\_Prop3\_Assessment):} Confidence scores ranging from 0 to 100\%.
+	\item \textbf{QC:} Quality control flags identifying data validity and processing anomalies.
+	\item \textbf{LW:} Land/water mask.
 \end{itemize}
 
 In this work, we used the LC\_Type1 classification to associate each satellite observation with a representative land cover class. This classification is integrated with methane concentration data from the TROPOMI/WFMD XCH\textsubscript{4} product to analyze spatiotemporal variability across ecological regions. The selected properties used to reproduce the results from \cite{Karoff2023} include:
 
 \begin{itemize}
-    \item Seasonal stratification using MODIS-defined seasons:
-    \begin{itemize}
-        \item \texttt{subtitles} = [\textit{Spring}, \textit{Summer}, \textit{Fall}, \textit{Winter}, \textit{All Seasons}]
-    \end{itemize}
-    \item Geographic coverage across all major continents:
-    \begin{itemize}
-        \item \texttt{continents} = [\textit{Africa}, \textit{Asia}, \textit{Australia}, \textit{North America}, \textit{Oceania}, \textit{South America}, \textit{Antarctica}, \textit{Europa}, \textit{World}]
-    \end{itemize}
-    \item Monthly encoding of seasonal MODIS files:
-    \begin{itemize}
-        \item \texttt{seasons} = [58108, 58197, 58290, 58384, 58473, 58562, 58655, 58749, 58839, 58928, 59020, 59114]
-    \end{itemize}
-    \item Land Cover classes used to analyze methane variation across land types:
-    \begin{itemize}
-        \item \texttt{LC\_LABELS} = [\textit{Evergreen Needleleaf}, \textit{Evergreen Broadleaf}, \textit{Deciduous Needleleaf}, \textit{Deciduous Broadleaf}, \textit{Mixed Forests}, \textit{Closed Shrubland}, \textit{Open Shrubland}, \textit{Woody Savannas}, \textit{Savannas}, \textit{Grasslands}, \textit{Wetlands}, \textit{Croplands}, \textit{Urban}, \textit{Natural Vegetation Mosaic}, \textit{Snow \& Ice}, \textit{Barren}, \textit{Water Bodies}, \textit{Any Land}]
-    \end{itemize}
+	\item Seasonal stratification using MODIS-defined seasons:
+	      \begin{itemize}
+		      \item \texttt{subtitles} = [\textit{Spring}, \textit{Summer}, \textit{Fall}, \textit{Winter}, \textit{All Seasons}]
+	      \end{itemize}
+	\item Geographic coverage across all major continents:
+	      \begin{itemize}
+		      \item \texttt{continents} = [\textit{Africa}, \textit{Asia}, \textit{Australia}, \textit{North America}, \textit{Oceania}, \textit{South America}, \textit{Antarctica}, \textit{Europa}, \textit{World}]
+	      \end{itemize}
+	\item Monthly encoding of seasonal MODIS files:
+	      \begin{itemize}
+		      \item \texttt{seasons} = [58108, 58197, 58290, 58384, 58473, 58562, 58655, 58749, 58839, 58928, 59020, 59114]
+	      \end{itemize}
+	\item Land Cover classes used to analyze methane variation across land types:
+	      \begin{itemize}
+		      \item \texttt{LC\_LABELS} = [\textit{Evergreen Needleleaf}, \textit{Evergreen Broadleaf}, \textit{Deciduous Needleleaf}, \textit{Deciduous Broadleaf}, \textit{Mixed Forests}, \textit{Closed Shrubland}, \textit{Open Shrubland}, \textit{Woody Savannas}, \textit{Savannas}, \textit{Grasslands}, \textit{Wetlands}, \textit{Croplands}, \textit{Urban}, \textit{Natural Vegetation Mosaic}, \textit{Snow \& Ice}, \textit{Barren}, \textit{Water Bodies}, \textit{Any Land}]
+	      \end{itemize}
 \end{itemize}
 
 \subsubsection{Formulaic Integration}
 Let $X_{i}$ denote the land cover class at spatial location $i$ and $Y_{i}$ the corresponding XCH\textsubscript{4} value. We denote the stratified data as
 \begin{equation}
-\mathcal{D}_c = \{ (X_{i}, Y_{i}) \mid X_{i} = c,\ \forall\ i \in \mathcal{I}_c \},
+	\mathcal{D}_c = \{ (X_{i}, Y_{i}) \mid X_{i} = c,\ \forall\ i \in \mathcal{I}_c \},
 \end{equation}
 where $\mathcal{I}_c$ indexes all observations with class $c$. This stratification forms the basis for comparative statistical and causal inference in downstream analysis.
 
 \subsubsection{Limitations of the MODIS Dataset}
 Some limitations of the MCD12Q1.061 dataset include cloud and snow contamination, mixed pixels in transitional biomes, and classification uncertainties in urban, mosaic, or heterogeneous regions. Despite these caveats, the dataset provides a powerful means to analyze spatial trends in methane emissions as a function of land surface processes.
+
+\section{Open-Source Software Ecosystem Development}
+\label{sec:software_ecosystem}
+
+Research Objective 6—creating a comprehensive open-source software ecosystem—represents a fundamental commitment to reproducible science and community impact. This section outlines the technical architecture, development strategy, and dissemination approach for the causal discovery toolkit that will emerge from this research.
+
+\subsection{Software Architecture and Design Principles}
+
+The open-source software ecosystem is designed around modular, interoperable components that reflect the methodological framework while ensuring accessibility and extensibility for the broader scientific community.
+
+\subsubsection{Core Architecture Components}
+
+\textbf{Data Integration Layer}: Provides standardized interfaces for satellite data ingestion, supporting multiple formats (NetCDF, HDF5, GeoTIFF) and coordinate systems. This layer handles temporal alignment, spatial resampling, and quality filtering to create analysis-ready datasets from heterogeneous Earth observation sources.
+
+\textbf{Causal Discovery Engine}: Implements the complete suite of temporal causal discovery methods (Granger causality, Transfer Entropy, PCMCI+) with unified APIs and consistent parameter interfaces. The engine supports both streaming and batch processing modes to accommodate varying computational environments and data volumes.
+
+\textbf{Ecosystem Stratification Module}: Enables land cover-based analysis stratification with support for multiple classification schemes (MODIS, ESA WorldCover, custom classifications). This module automates the generation of ecosystem-specific datasets and comparative analyses across biomes.
+
+\textbf{Validation and Benchmarking Framework}: Provides synthetic data generation capabilities for method validation, performance benchmarking tools, and standardized evaluation metrics. This framework enables users to assess method performance under known conditions and compare alternative approaches.
+
+\textbf{Visualization and Interpretation Layer}: Offers interactive plotting capabilities for causal networks, time series visualization, and spatial mapping of results. This layer integrates with popular Python visualization libraries while providing domain-specific plotting functions for environmental applications.
+
+\subsubsection{Technical Implementation Standards}
+
+\textbf{Programming Language and Dependencies}: The ecosystem is implemented in Python 3.8+, leveraging established scientific computing libraries (NumPy, SciPy, Pandas, Xarray for data handling; Scikit-learn for machine learning integration; NetworkX for graph analysis; Matplotlib/Plotly for visualization).
+
+\textbf{Documentation and Testing}: Comprehensive documentation following NumPy documentation standards, with API documentation, tutorials, and example workflows. The codebase maintains >90\% test coverage using pytest, with continuous integration ensuring compatibility across platforms and dependency versions.
+
+\textbf{Performance Optimization}: Computational bottlenecks are optimized using Numba for just-in-time compilation and optional GPU acceleration for large-scale analyses. The framework supports distributed computing via Dask for processing large satellite datasets.
+
+\subsection{Research Code Development and Dissemination Strategy}
+
+\subsubsection{Phased Development Approach}
+
+\textbf{Initial Development (Year 3)}: Core research code implementing causal discovery methods with basic data processing capabilities. Code made available to collaborators and research community for validation and feedback.
+
+\textbf{Comprehensive Library (Year 4)}: Complete research toolkit with full documentation, example notebooks, and tutorial materials. Public repository establishment for community access and collaborative development.
+
+\textbf{Research Publication (Year 5)}: Mature research codebase with comprehensive validation, optimized algorithms, and community documentation. Accompanying software paper publication for academic citation and recognition.
+
+\subsubsection{Open Science and Community Engagement}
+
+\textbf{Open Research Development}: Development follows open science principles with public GitHub repository, transparent code development, and community engagement through issue discussions and collaborative contributions from other researchers.
+
+\textbf{Educational and Tutorial Materials}: Comprehensive Jupyter notebooks, tutorial documentation, and example workflows integrated with platforms like Google Colab to facilitate adoption by other researchers and students in environmental and atmospheric sciences.
+
+\textbf{Research Collaboration}: Active collaboration with research institutions, space agencies (ESA, NASA), and environmental monitoring research groups to validate methods, share expertise, and ensure the research tools address real scientific needs.
+
+\textbf{Academic Publication}: Research code and methodologies are documented through peer-reviewed publications in journals such as the Journal of Open Source Software (JOSS) or Environmental Research Letters, providing proper academic citation pathways and research impact assessment.
+
+This comprehensive research code development strategy ensures that Research Objective 6 is addressed through the creation of open, reproducible research tools that enable the scientific community to build upon this work and apply causal discovery methods to diverse environmental monitoring challenges.
 
